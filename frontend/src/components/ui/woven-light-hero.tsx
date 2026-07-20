@@ -1,115 +1,30 @@
 "use client";
 
 import React, { useRef, useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
 import * as THREE from 'three';
 
-// --- Main Hero Component ---
-export const WovenLightHero = () => {
-  const textControls = useAnimation();
-  const buttonControls = useAnimation();
+interface WovenLightHeroProps {
+  children?: React.ReactNode;
+}
 
-  useEffect(() => {
-    // Add a more elegant font
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-
-    textControls.start((i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1 + 1.5,
-        duration: 1.2,
-        ease: [0.2, 0.65, 0.3, 0.9],
-      },
-    }));
-    buttonControls.start({
-      opacity: 1,
-      transition: { delay: 2.5, duration: 1 },
-    });
-
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, [textControls, buttonControls]);
-
-  const headline = 'Woven by Light';
-  const words = headline.split(' ');
-
+// --- Main Hero Component Wrapper ---
+export const WovenLightHero: React.FC<WovenLightHeroProps> = ({ children }) => {
   return React.createElement(
     'div',
     {
       className:
         'relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-black dark:bg-white',
     },
+    // The background WebGL wallpaper layers underneath
     React.createElement(WovenCanvas, null),
-    React.createElement(HeroNav, null),
+    
+    // Transparent layer carrying your actual interactive frontend elements on top
     React.createElement(
       'div',
-      { className: 'relative z-10 text-center px-4' },
-      React.createElement(
-        'h1',
-        {
-          className: 'text-6xl md:text-8xl text-white dark:text-slate-900',
-          style: {
-            fontFamily: "'Playfair Display', serif",
-            textShadow: '0 0 50px rgba(255, 255, 255, 0.3)',
-          },
-        },
-        words.map((word, i) =>
-          React.createElement(
-            'span',
-            { key: i, className: 'inline-block' },
-            word.split('').map((char, j) =>
-              React.createElement(
-                motion.span,
-                {
-                  key: j,
-                  custom: i * 5 + j,
-                  initial: { opacity: 0, y: 50 },
-                  animate: textControls,
-                  style: { display: 'inline-block' },
-                },
-                char,
-              ),
-            ),
-            i < words.length - 1 && React.createElement('span', { key: `space-${i}` }, '\u00A0'),
-          ),
-        ),
-      ),
-      React.createElement(
-        motion.p,
-        {
-          custom: headline.length,
-          initial: { opacity: 0, y: 30 },
-          animate: textControls,
-          className: 'mx-auto mt-6 max-w-xl text-lg text-slate-300 dark:text-slate-600',
-          style: { fontFamily: "'Inter', sans-serif" },
-        },
-        'An interactive tapestry of light and motion, crafted with code and creativity.',
-      ),
-      React.createElement(
-        motion.div,
-        { initial: { opacity: 0 }, animate: buttonControls, className: 'mt-10' },
-        React.createElement(
-          'button',
-          {
-            className:
-              'rounded-full border-2 border-white/20 bg-white/10 px-8 py-3 font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 dark:border-slate-800/20 dark:bg-slate-800/5 dark:text-slate-800 dark:hover:bg-slate-800/10',
-            style: { fontFamily: "'Inter', sans-serif" },
-          },
-          'Explore the Weave',
-        ),
-      ),
-    ),
+      { className: 'relative z-10 w-full h-full flex flex-col items-center justify-center' },
+      children
+    )
   );
-};
-
-// --- Navigation Component ---
-const HeroNav = () => {
-  return React.createElement(motion.nav, null);
 };
 
 // --- Three.js Canvas Component ---
@@ -230,7 +145,7 @@ const WovenCanvas = () => {
       }
       geometry.attributes.position.needsUpdate = true;
 
-      points.rotation.y = elapsedTime * 0.0;
+      points.rotation.y = elapsedTime * 0.1;
       renderer.render(scene, camera);
     };
     animate();
