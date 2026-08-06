@@ -10,7 +10,7 @@
   height: 70vh; 
   background-image: 
     linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%),
-    url('../assets/discoverBG.jpg'); /* Adjust path to your asset */
+    url('../assets/discoverBG.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -80,7 +80,7 @@
 .card-username {
   color: #7ea16b; 
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -115,6 +115,18 @@
   gap: 1rem;
 }
 
+
+.like-btn {
+  background: none;
+  border: none;
+  color: #9ca3af; 
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+
 .icon-btn {
   background: none;
   border: none;
@@ -142,6 +154,7 @@
 }
 
 .read-more-btn {
+  font-family: Poppins, sans-serif;
   background: none;
   border: none;
   color: #fff;

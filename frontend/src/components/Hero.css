@@ -20,7 +20,7 @@
   right: 30%; 
   width: 50vw; 
   height: 100%;
-  z-index: 1; /* Sits above the background image */
+  z-index: 1; 
   pointer-events: none; 
 }
 
@@ -32,8 +32,7 @@
   max-width: 1580px; 
   margin: 0 auto;
   padding: 0 2rem;
-  
-  /* Flexbox handles the vertical centering */
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,12 +52,12 @@
 }
 
 .hero-title {
-  font-size: clamp(3rem, 5vw, 4rem); /* Responsive sizing */
+  font-size: clamp(3rem, 5vw, 4rem); /* kinda responsive sizing */
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.1; 
   margin-bottom: 1.5rem;
-  margin-top: 0; /* Remove default margin */
+  margin-top: 0;
 }
 
 .hero-description {

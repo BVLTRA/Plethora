@@ -162,6 +162,18 @@
   transition: all 0.2s ease;
 }
 
+
+.like-btn, .comment-btn {
+  background: none;
+  border: none;
+  color: #9ca3af; 
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+
 .btn-outline {
     font-family: "Poppins", sans-serif;
   border: 1px solid #7ea16b9c;

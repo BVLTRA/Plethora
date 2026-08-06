@@ -4,7 +4,7 @@ import './Share.css';
 export default function Share() {
   const [content, setContent] = useState('');
 
-  // A handler just to demonstrate state
+  // TEMP STATE HANDLER:
   const handleClear = () => {
     if (window.confirm("Delete this draft?")) {
       setContent('');

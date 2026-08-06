@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-// Import your components (adjust these paths to match your folder structure)
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/Hero";
 import Discover from './pages/Discover'; 

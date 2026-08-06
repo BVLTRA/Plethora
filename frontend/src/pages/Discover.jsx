@@ -2,7 +2,7 @@ import React from 'react';
 import StoryCard from '../components/ui/StoryCard';
 import './Discover.css';
 
-// Dummy data mirroring the raw signal vibe of Plethora
+// Dummy data 
 const DUMMY_POSTS = [
   {
     id: 1,
@@ -34,12 +34,12 @@ export default function Discover() {
   return (
     <main className="discover-page">
       
-      {/* The Hero: Image + Fade to Black */}
+      {/* Hero: Image and fade to black funk only */}
       <section className="discover-hero">
         <div className="hero-content">
           <div className="hero-text-block">
             <h2 className="hero-subtitle">Plethora Diary</h2>
-            <h1 className="hero-title">Listen. Aid. Connect.</h1>
+            <h1 className="hero-title">Help, Share & Connect.</h1>
           </div>
         </div>
       </section>

@@ -9,7 +9,6 @@ export default function Navbar() {
       
       {/* Left Column: Navigation Links */}
       <div className="nav-group nav-left">
-        {/* Swapped <a href="..."> for <Link to="..."> */}
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/share" className="nav-link">Share</Link>
         <Link to="/discover" className="nav-link">Discover</Link>
