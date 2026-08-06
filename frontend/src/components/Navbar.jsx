@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 import Logo from '../assets/logo.png';
 
@@ -8,21 +9,22 @@ export default function Navbar() {
       
       {/* Left Column: Navigation Links */}
       <div className="nav-group nav-left">
-        <a href="/" className="nav-link">Home</a>
-        <a href="/share" className="nav-link">Share</a>
-        <a href="/discover" className="nav-link">Discover</a>
+        {/* Swapped <a href="..."> for <Link to="..."> */}
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/share" className="nav-link">Share</Link>
+        <Link to="/discover" className="nav-link">Discover</Link>
       </div>
 
       {/* Center Column: Logo */}
       <div className="nav-group nav-center">
-        <a href="/" className="brand-logo">
+        <Link to="/" className="brand-logo">
           <img src={Logo} alt="Plethora Logo" className="brand-image" />
-        </a>
+        </Link>
       </div>
 
       {/* Right Column: Account */}
       <div className="nav-group nav-right">
-        <a href="/account" className="nav-link">Account</a>
+        <Link to="/account" className="nav-link">Account</Link>
       </div>
 
     </nav>
