@@ -145,7 +145,7 @@ const WovenCanvas = () => {
       }
       geometry.attributes.position.needsUpdate = true;
 
-      points.rotation.y = elapsedTime * 0.1;
+      points.rotation.y = elapsedTime * 0.0;
       renderer.render(scene, camera);
     };
     animate();
