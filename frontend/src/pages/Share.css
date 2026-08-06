@@ -1,21 +1,25 @@
 /* Page structure */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap");
 
 /* --- PAGE BACKGROUND & FADE MECHANISM --- */
 .share-page {
   min-height: 100vh;
   color: #fff;
-  padding-top: 140px; 
+  padding-top: 140px;
   padding-bottom: 4rem;
-  
- 
-  background-image: 
-    linear-gradient(to bottom, #000000 0%, #000000 30%, rgba(0, 0, 0, 0.4) 100%),
-    url('../assets/discoverBG.jpg');
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      #000000 0%,
+      #000000 30%,
+      rgba(0, 0, 0, 0.4) 100%
+    ),
+    url("../assets/shareBG.jpg");
   background-size: cover;
   background-position: center;
-  
-  background-attachment: fixed; 
+
+  background-attachment: fixed;
 }
 
 .share-container {
@@ -29,12 +33,13 @@
 /* Header */
 .share-header {
   margin-bottom: 2rem;
-  text-align: left; 
+  text-align: left;
 }
 
 .share-title {
+  font-family: var(--font-stack);
   font-size: clamp(1rem, 2vw, 3rem);
-  font-weight: 300; /* Thinned out */
+  font-weight: 300;
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin-bottom: 0.5rem;
@@ -42,7 +47,7 @@
 
 .share-username {
   font-size: clamp(1rem, 2vw, 3rem);
-  font-weight: 300; 
+  font-weight: 300;
   color: #fff;
   margin: 0;
   letter-spacing: -0.02em;
@@ -50,31 +55,31 @@
 
 .username-text {
   color: #7ea16b; /* Sage Green */
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 
 /* 
-  The Editor Wrapper & Mask Mechanism 
+  Editor Wrapper & Mask  
 */
 .editor-wrapper {
   position: relative;
-  background-color: #0c0c0c;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  
+  background-color: #000000;
+  border-left: 1px solid #7ea16b9c;
+  border-right: 1px solid #7ea16b9c;
+  border-bottom: 1px solid #7ea16b9c;
+  border-bottom-left-radius: 32px;
+  border-bottom-right-radius: 32px;
+
   /* Mask erasing the top 15% */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
-  
+
   margin-bottom: 2rem;
   transition: border-color 0.3s ease;
 }
 
 .editor-wrapper:focus-within {
-  border-color: rgba(28, 49, 68, 0.8); /* Deep Space Blue */
+  border-color: #7ea16b; /* Deep Space Blue */
 }
 
 .story-editor {
@@ -83,12 +88,12 @@
   background: transparent;
   border: none;
   color: #d1d5db;
-  
-  /* Forcing Poppins and overriding browser defaults */
-  font-family: 'Poppins', sans-serif; 
-  font-weight: 300; /* Thinned out */
-  text-align: left; 
-  
+
+  /* Note: Might not pick Poppins */
+  font-family: "Poppins", sans-serif;
+  font-weight: 300; /* Note: Thinned out */
+  text-align: left;
+
   font-size: 1.125rem;
   line-height: 1.7;
   padding: 3rem 2rem 2rem 2rem;
@@ -126,13 +131,13 @@
 
 /* Delete Button */
 .icon-btn {
-  background: none;
-  border: none;
-  color: #596f62; /* Granite */
+  border: 1px solid #7ea16b9c;
+  background: rgba(0, 0, 0, 0.567);
+  color: #abc89be5; /* Granite */
   cursor: pointer;
-  padding: 0.5rem;
-  width: 36px;
-  height: 36px;
+  padding: 0.65rem;
+  width: 49px;
+  height: 49px;
   border-radius: 50%;
   transition: all 0.2s ease;
   display: flex;
@@ -141,14 +146,16 @@
 }
 
 .delete-btn:hover {
-  color: #70161e; 
-  background-color: rgba(112, 22, 30, 0.1);
+  color: #b11f1f;
+  background-color: #2b0a0ec6;
+  border: 1px solid #cf0d1dbc;
 }
 
-/* Standard Buttons (reused logic from your Home page) */
-.btn-outline, .btn-solid {
+/* Standard Buttons (If you break it, just go back to the Home page one) */
+.btn-outline,
+.btn-solid {
   padding: 0.75rem 2rem;
-  border-radius: 9999px;
+  border-radius: 6799px;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -156,21 +163,34 @@
 }
 
 .btn-outline {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: transparent;
-  color: #fff;
+    font-family: "Poppins", sans-serif;
+  border: 1px solid #7ea16b9c;
+  background: rgba(0, 0, 0, 0.567);
+  color: #8bcd85;
 }
 
 .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(37, 37, 37, 0.493);
+  border: 1px solid rgb(105, 166, 115);
 }
 
 .btn-solid {
-  border: 1px solid #fff;
-  background: #fff;
-  color: #000;
+  background: #000000da;
+  color: #98c380;
+  border: 1px solid #408e44;
+  font-family: "Poppins", sans-serif;
 }
 
 .btn-solid:hover {
-  background: #e5e5e5;
+  border: 1px solid #669350;
+  background: #284519cf;
+  color: #86d68a;
 }
+
+/* 
+color: #c3d898;   Tea Green 
+color: #70161e;   Burgundy 
+rgba(28, 49, 68, 0.8); Deep Space Blue
+color: #596f62; Granite 
+color: #7ea16b; Sage Green 
+*/
