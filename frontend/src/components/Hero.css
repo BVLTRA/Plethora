@@ -2,21 +2,25 @@
 .hero-container {
   position: relative; 
   width: 100%;
-  height: 100vh;
-  background-color: #000;
+  height: 100vh; 
   color: #fff;
-  overflow: hidden; /* Prevents scrollbars if the canvas animation renders slightly out of bounds */
+  overflow: hidden; 
+  
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%),
+    url('../assets/hero.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-
 /* Background Layer */
 .hero-canvas-wrapper {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  right: 30%; 
+  width: 50vw; 
   height: 100%;
-  z-index: 0; /* Pushes it to the back */
-  
+  z-index: 1; /* Sits above the background image */
   pointer-events: none; 
 }
 
