@@ -1,0 +1,71 @@
+
+.plethora-navbar {
+box-sizing: border-box;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80px;
+  padding: 0 13rem;
+  
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Required for Safari */
+  
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  z-index: 9999;
+  
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+/* Aligning the grid children */
+.nav-left {
+  justify-self: start;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-center {
+  justify-self: center;
+}
+
+.nav-right {
+  justify-self: end;
+}
+
+/* Typography & Interactions */
+.nav-link {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.brand-icon {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.brand-text {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
