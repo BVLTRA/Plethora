@@ -3,3 +3,135 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+html {
+  scroll-behavior: smooth;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+/* 100 - Thin */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-ThinItalic.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 200 - ExtraLight */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-ExtraLightItalic.woff2') format('woff2');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 300 - Light */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 400 - Regular */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 500 - Medium */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 700 - Bold */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 900 - Black */
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visuelt Pro';
+  src: url('/fonts/VisueltPro-BlackItalic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-stack: "Visuelt Pro", Helvetica, Arial, sans-serif;
+  --bg-off-white: #f5f5f7;
+  --pure-white: #ffffff;
+  --text-dark: #111111;
+  --text-muted: #666666;
+}
+
+body {
+  font-family: var(--font-stack);
+  background-color: var(--bg-off-white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}

@@ -40,7 +40,7 @@
 }
 
 .hero-text-block {
-  max-width: 650px; 
+  max-width: 750px; 
   text-align: left; 
 }
 
@@ -58,11 +58,14 @@
   letter-spacing: -0.02em;
   line-height: 1.1; 
   margin-bottom: 1.5rem;
+  margin-top: 0; /* Remove default margin */
 }
 
 .hero-description {
-  font-size: 1.125rem;
-  color: #9ca3af;
+  font-family: 'Visuelt Pro', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: #f1f1e5;
   line-height: 1.6;
   margin-bottom: 2.5rem;
 }
@@ -100,4 +103,11 @@
 
 .btn-solid:hover {
   background: #e5e5e5;
+}
+
+.hero-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: normal;  
+    font-style: italic;
+    font-size: 4.5rem;
 }
