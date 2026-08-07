@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Share.css';
 
 export default function Share() {
   const [content, setContent] = useState('');
+  const navigate = useNavigate();
 
   // TEMP STATE HANDLER:
   const handleClear = () => {
-    if (window.confirm("Delete this draft?")) {
+    if (window.confirm("Delete this draft? (fyi Talya said this is bad bad.. dont forget")) {
       setContent('');
     }
+  };
+
+  const handleDraft = () => {
+    window.alert("Drafted");
+    setContent('');
   };
 
   return (
@@ -48,7 +55,9 @@ export default function Share() {
           </button>
 
           <div className="primary-actions">
-            <button className="btn-outline">Draft & Return</button>
+            <button className="btn-outline" onClick={handleDraft}>
+              Save Draft
+            </button>
             <button className="btn-solid">Upload</button>
           </div>
         </div>

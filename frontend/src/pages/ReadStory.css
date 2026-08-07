@@ -141,13 +141,13 @@
 }
 
 .icon-btn {
-  background: none;
-  border: none;
-  color: #596f62; /* Granite */
+  border: 1px solid #7ea16b9c;
+  background: rgba(0, 0, 0, 0.567);
+  color: #abc89be5; /* Granite */
   cursor: pointer;
-  padding: 0.5rem;
-  width: 36px;
-  height: 36px;
+  padding: 0.65rem;
+  width: 49px;
+  height: 49px;
   border-radius: 50%;
   transition: all 0.2s ease;
   display: flex;
@@ -156,8 +156,9 @@
 }
 
 .delete-btn:hover {
-  color: #70161e; /* Burgundy */
-  background-color: rgba(112, 22, 30, 0.1);
+  color: #b11f1f;
+  background-color: #2b0a0ec6;
+  border: 1px solid #cf0d1dbc;
 }
 
 .btn-outline, .btn-solid {

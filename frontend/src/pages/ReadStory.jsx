@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom'; 
+import { useParams, useNavigate } from 'react-router-dom'; 
 import './ReadStory.css';
 
 export default function ReadStory() {
   const { id } = useParams();
   const [reply, setReply] = useState('');
+  const navigate = useNavigate();
 
   const handleClear = () => {
     if (window.confirm("Delete this draft?")) {
@@ -12,11 +13,15 @@ export default function ReadStory() {
     }
   };
 
+  const handleDraftAndReturn = () => {
+    navigate('/discover');
+  };
+
   return (
     <main className="read-page">
       <div className="read-container">
         
-        {/* Section 1: The Original Transmission */}
+        {/* original entry!! */}
         <article className="original-story">
           <header className="story-header">
             <h1 className="story-title">Muscle Memory</h1>
@@ -39,7 +44,7 @@ export default function ReadStory() {
           <div className="editor-wrapper">
             <textarea 
               className="story-editor"
-              placeholder="Add your resonance..."
+              placeholder="Add a reply..."  // Might rephrase
               value={reply}
               onChange={(e) => setReply(e.target.value)}
               spellCheck="false"
@@ -59,7 +64,7 @@ export default function ReadStory() {
             </button>
 
             <div className="primary-actions">
-              <button className="btn-outline">Draft & Return</button>
+              <button className="btn-outline" onClick={handleDraftAndReturn}>Draft & Return</button>
               <button className="btn-solid">Send Reply</button>
             </div>
           </div>

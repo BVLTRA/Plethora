@@ -70,7 +70,7 @@ export default function Account() {
         </div>
       </nav>
 
-      {/* The Grid Feed */}
+      {/* Grid Feed */}
       <section className="account-feed">
         <div className="feed-grid">
           {currentFeed.length > 0 ? (

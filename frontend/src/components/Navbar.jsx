@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import './Navbar.css';
 import Logo from '../assets/logo.png';
 
@@ -9,9 +9,9 @@ export default function Navbar() {
       
       {/* Left Column: Navigation Links */}
       <div className="nav-group nav-left">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/share" className="nav-link">Share</Link>
-        <Link to="/discover" className="nav-link">Discover</Link>
+        <NavLink to="/" end className="nav-link">Home</NavLink>
+        <NavLink to="/share" className="nav-link">Share</NavLink>
+        <NavLink to="/discover" className="nav-link">Discover</NavLink>
       </div>
 
       {/* Center Column: Logo */}
@@ -23,7 +23,7 @@ export default function Navbar() {
 
       {/* Right Column: Account */}
       <div className="nav-group nav-right">
-        <Link to="/account" className="nav-link">Account</Link>
+        <NavLink to="/account" className="nav-link">Account</NavLink>
       </div>
 
     </nav>

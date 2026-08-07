@@ -2,7 +2,7 @@ import React from 'react';
 import StoryCard from '../components/ui/StoryCard';
 import './Discover.css';
 
-// Dummy data 
+// Generated dummy data 
 const DUMMY_POSTS = [
   {
     id: 1,
@@ -35,6 +35,7 @@ export default function Discover() {
     <main className="discover-page">
       
       {/* Hero: Image and fade to black funk only */}
+      {/* Note: Try to remember what you ment by "funk" */}
       <section className="discover-hero">
         <div className="hero-content">
           <div className="hero-text-block">
@@ -44,7 +45,7 @@ export default function Discover() {
         </div>
       </section>
 
-      {/* The Void: Solid black section for the cards */}
+      {/* "Void" section: Solid black section for the cards */}
       <section className="discover-feed">
         <div className="feed-grid">
           {DUMMY_POSTS.map(post => (
