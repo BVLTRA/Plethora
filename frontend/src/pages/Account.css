@@ -1,0 +1,166 @@
+/* --- PAGE STRUCTURE --- */
+.account-page {
+  min-height: 100vh;
+  color: #fff;
+  background-color: #000; 
+  
+  /* 
+    0% starts slightly darkened so the navbar/text is readable.
+    By 20% of the way down the screen, it hits solid pitch black.
+    The final 100% stop ensures the black stretches all the way to the footer.
+  */
+  background-image: 
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, #000000 20%, #000000 100%),
+    url('../assets/shareBG.jpg'); 
+    
+  background-size: cover;
+  background-position: center top; 
+  background-attachment: fixed; 
+  background-repeat: no-repeat;
+}
+
+/* --- PROFILE HEADER --- */
+.profile-header {
+  position: relative;
+  padding-top: 140px; 
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.profile-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center; 
+  gap: 1.5rem;
+}
+
+.profile-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the username and status group */
+  gap: 0.5rem;
+}
+
+.profile-username {
+  color: #7ea16b; /* Sage Green */
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.profile-status {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #596f62; /* Granite */
+  box-shadow: 0 0 8px rgba(89, 111, 98, 0.5);
+}
+
+.status-text {
+  color: #596f62; 
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--font-stack);
+}
+
+.profile-bio {
+  font-family: 'Times New Roman', Times, serif;
+  color: #d4e2c8;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto; 
+}
+
+/* --- TABS NAVIGATION --- */
+.profile-tabs-wrapper {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #000;
+  position: sticky;
+  top: 80px; 
+  z-index: 50;
+}
+
+.profile-tabs {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 2.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: #596f62; /* Granite */
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 1.25rem 0;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: #c3d898; /* Tea Green */
+}
+
+.tab-btn.active {
+  color: #c9e7c8d8;
+}
+
+/* animated underline for actve tab */
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #c9e7c8d8;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+  transform-origin: left;
+}
+
+.tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+/* --- FEED & GRID REUSE --- */
+.account-feed {
+  padding: 3rem 2rem 6rem 2rem;
+  background-color: #000;
+}
+
+.feed-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  /* Fluid grid engine identical to the Discover page */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-state {
+  grid-column: 1 / -1; /* Spans the entire width of the grid */
+  padding: 4rem 0;
+  text-align: left;
+  color: #596f62;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}

@@ -59,7 +59,7 @@ const WovenCanvas = () => {
     const velocities = new Float32Array(particleCount * 3);
 
     const geometry = new THREE.BufferGeometry();
-    const torusKnot = new THREE.TorusKnotGeometry(1.5, 0.5, 200, 32);
+    const torusKnot = new THREE.TorusKnotGeometry(1.5, 1, 200, 32);
 
     for (let i = 0; i < particleCount; i++) {
       const vertexIndex = i % torusKnot.attributes.position.count;
@@ -85,8 +85,9 @@ const WovenCanvas = () => {
       velocities[i * 3 + 2] = 0;
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3
+    ));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 2));
 
     const material = new THREE.PointsMaterial({
       size: 0.02,

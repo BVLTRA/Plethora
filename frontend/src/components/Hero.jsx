@@ -1,6 +1,6 @@
 import React from 'react';
 import './Hero.css';
-import { WovenLightHero } from '../components/ui/woven-light-hero';
+import { WovenLightHero } from './ui/woven-light-hero';
 
 export default function HeroSection() {
   return (
@@ -15,7 +15,7 @@ export default function HeroSection() {
       <div className="hero-content">
         <div className="hero-text-block">
           <h2 className="hero-subtitle">Plethora Diary</h2>
-          <h1 className="hero-title">Speak into the void. It is listening.</h1>
+          <h1 className="hero-title">You don't have to bear it alone</h1>
           <p className="hero-description">
             We weren't built to carry it all alone. Plethora is a public, uncurated stream of human weight. No profiles. No search bar. Just the raw signal of what people are dealing with right now.
           </p>
