@@ -64,6 +64,11 @@ box-sizing: border-box;
   text-decoration: none;
 }
 
+.brand-logo img {
+  height: 32px;
+  color: #ffffff;
+}
+
 .brand-icon {
   width: 24px;
   height: 24px;

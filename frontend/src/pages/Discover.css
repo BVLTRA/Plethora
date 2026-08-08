@@ -127,7 +127,7 @@
 }
 
 
-.icon-btn {
+.icon-btn-disc {
   background: none;
   border: none;
   color: #596f62; /* Granite */
@@ -141,7 +141,7 @@
   justify-content: center;
 }
 
-.icon-btn:hover {
+.comment-btn:hover {
   color: #c3d898; /* Tea Green */
 }
 
