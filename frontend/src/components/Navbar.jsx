@@ -12,6 +12,7 @@ export default function Navbar() {
         <NavLink to="/" end className="nav-link">Home</NavLink>
         <NavLink to="/share" className="nav-link">Share</NavLink>
         <NavLink to="/discover" className="nav-link">Discover</NavLink>
+
       </div>
 
       {/* Center Column: Logo */}
@@ -24,6 +25,7 @@ export default function Navbar() {
       {/* Right Column: Account */}
       <div className="nav-group nav-right">
         <NavLink to="/account" className="nav-link">Account</NavLink>
+        <NavLink to="/auth" className="nav-link">Login</NavLink>
       </div>
 
     </nav>
