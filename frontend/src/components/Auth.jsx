@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
-import logo from '../assets/logo.png';
+import Logo from '../assets/logo.png';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  
+  // Form State
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  // Verification State
+  const [isAgeVerified, setIsAgeVerified] = useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -14,13 +22,15 @@ export default function Auth() {
     console.log(`Submitting ${isLogin ? 'Login' : 'Signup'} for:`, email);
   };
 
+  // The button is disabled if it's a Signup AND they haven't checked both boxes
+  const isSubmitDisabled = !isLogin && (!isAgeVerified || !isTermsAccepted);
+
   return (
     <main className="auth-layout">
       
-      {/* Global Header */}
       <header className="auth-global-header">
         <Link to="/" className="brand-logo">
-          <img src={logo} alt="Plethora Logo" className="brand-image" />
+          <img src={Logo} alt="Plethora Logo" className="brand-image" />
         </Link>
         
         <button onClick={() => navigate('/discover')} className="guest-link">
@@ -28,20 +38,17 @@ export default function Auth() {
         </button>
       </header>
 
-      {/* Left Column: Spatial anchor for the text */}
       <div className="auth-left">
-        {/* Key forces the animation to re-run on toggle */}
         <div className="welcome-text-wrapper" key={isLogin ? 'login' : 'signup'}>
           <h1 className="welcome-title">
             {isLogin ? "Welcome back to the community." : "Welcome to the community."}
           </h1>
           <p className="welcome-subtitle">
-            {isLogin ? "Pick up where you left off. " : "Offload the weight. You aren't alone."}
+            {isLogin ? "Pick up where you left off." : "Offload the weight. Connect with others."}
           </p>
         </div>
       </div>
 
-      {/* Right Column: Centers the auth card */}
       <div className="auth-right">
         <div className="auth-card">
           
@@ -61,6 +68,22 @@ export default function Auth() {
           </header>
 
           <form className="auth-form" onSubmit={handleSubmit}>
+            
+            {/* Conditional Username Field */}
+            {!isLogin && (
+              <div className="input-group">
+                <label htmlFor="username">Username</label>
+                <input 
+                  type="text" 
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="unfiltered_node"
+                  required
+                />
+              </div>
+            )}
+
             <div className="input-group">
               <label htmlFor="email">Email</label>
               <input 
@@ -85,7 +108,34 @@ export default function Auth() {
               />
             </div>
 
-            <button type="submit" className="btn-primary">
+            {/* Conditional Agreements */}
+            {!isLogin && (
+              <div className="auth-agreements">
+                <div className="checkbox-group">
+                  <input 
+                    type="checkbox" 
+                    id="age-verify" 
+                    checked={isAgeVerified}
+                    onChange={(e) => setIsAgeVerified(e.target.checked)}
+                  />
+                  <label htmlFor="age-verify">I confirm that I am 15 years of age or older.</label>
+                </div>
+                
+                <div className="checkbox-group">
+                  <input 
+                    type="checkbox" 
+                    id="terms-verify" 
+                    checked={isTermsAccepted}
+                    onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                  />
+                  <label htmlFor="terms-verify">
+                    I agree to the <Link to="/terms" target="_blank" rel="noopener noreferrer" className="terms-link">Terms of Use</Link>.
+                  </label>
+                </div>
+              </div>
+            )}
+
+            <button type="submit" className="btn-primary" disabled={isSubmitDisabled}>
               {isLogin ? 'Initialize Session' : 'Create Node'}
             </button>
           </form>
@@ -94,7 +144,6 @@ export default function Auth() {
             <span>or continue with</span>
           </div>
 
-          {/* OAuth block */}
           <div className="oauth-group">
             <button className="btn-oauth" type="button">
               <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
