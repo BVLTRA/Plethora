@@ -33,9 +33,6 @@ export default function Auth() {
           <img src={Logo} alt="Plethora Logo" className="brand-image" />
         </Link>
         
-        <button onClick={() => navigate('/discover')} className="guest-link">
-          Continue as guest
-        </button>
       </header>
 
       <div className="auth-left">
@@ -154,11 +151,14 @@ export default function Auth() {
               </svg>
               Google
             </button>
-          </div>
-
+          </div>          
+        </div>
+        <div className="guest-link-wrapper">
+          <button onClick={() => navigate('/discover')} className="guest-link">
+            Continue as guest
+          </button>
         </div>
       </div>
-
     </main>
   );
 }
