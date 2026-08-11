@@ -115,7 +115,7 @@ export default function Auth() {
                     checked={isAgeVerified}
                     onChange={(e) => setIsAgeVerified(e.target.checked)}
                   />
-                  <label htmlFor="age-verify">I confirm that I am 15 years of age or older.</label>
+                  <label htmlFor="age-verify">I confirm that I am 13 years of age or older.</label>
                 </div>
                 
                 <div className="checkbox-group">

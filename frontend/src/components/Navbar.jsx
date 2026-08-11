@@ -6,7 +6,7 @@ import Logo from '../assets/logo.png';
 export default function Navbar() {
   const location = useLocation();
 
-  if (location.pathname === '/auth') {
+  if (location.pathname === '/auth' || location.pathname === '/terms') {
     return null; 
   }
 

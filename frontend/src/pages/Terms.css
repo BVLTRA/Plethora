@@ -4,15 +4,14 @@
   position: relative;
   
   /* 
-    The Horizontal Reading Column:
-    0% (Left Edge): Slightly darkened so it isn't blinding.
-    20%: Hits 95% opacity black.
-    80%: Holds that 95% black across the center text area.
-    100% (Right Edge): Fades back to the image.
+    The Horizontal Reading Column Mechanism:
+    0% to 20%: Fades from semi-transparent to solid black.
+    20% to 80%: Creates the solid black reading void in the center.
+    80% to 100%: Fades back out to the image.
   */
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.4) 100%),
-    url('../assets/discoverBG.jpg'); /* Make sure this path points to the image you want */
+    linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.5) 100%),
+    url('../assets/discoverBG.jpg'); 
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -28,30 +27,55 @@
   z-index: 10;
 }
 
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.brand-icon {
+  width: 28px;
+  height: 28px;
+  color: #fff;
+}
+
+.brand-text {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
 /* --- READING COLUMN --- */
 .terms-content-wrapper {
   display: flex;
   justify-content: center;
-  padding: 140px 2rem 6rem 2rem; /* Pushes text below the logo */
+  padding: 140px 2rem 6rem 2rem; 
 }
 
 .terms-document {
   width: 100%;
-  max-width: 720px; /* Constrains line length for optimal readability */
+  max-width: 800px; /* Constrains line length */
 }
 
 /* --- TYPOGRAPHY --- */
 .terms-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 300;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
+  color: #fff;
+  line-height: normal;
+  text-align: left;
 }
 
 .terms-date {
   font-family: 'Courier New', Courier, monospace;
   color: #596f62; /* Granite */
+  text-align: left;
   font-size: 0.9rem;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
@@ -59,22 +83,68 @@
 }
 
 .terms-body section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
+  text-align: justify;
+
 }
 
 .terms-body h2 {
   font-family: 'Poppins', sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
-  color: #c3d898; /* Tea Green to make headers pop slightly */
+  color: #7ea16b; /* Sage Green */
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.terms-body h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #c3d898; /* Tea Green */
+  margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
 .terms-body p {
+  font-family: 'Visuelt Pro', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: #d1d5db;
+  margin-bottom: 1.25rem;
+}
+
+.terms-body strong {
+  font-weight: 500;
+  color: #fff; /* Highlights key legal terms in pure white against the dimmed body text */
+}
+
+.terms-body ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.terms-body li {
   font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.8;
   color: #d1d5db;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+/* Custom minimal bullet points using Granite */
+.terms-body li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 6px;
+  height: 6px;
+  background-color: #596f62; 
+  border-radius: 50%;
 }
