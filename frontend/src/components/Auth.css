@@ -13,11 +13,12 @@
 
 /* --- GLOBAL HEADER --- */
 .auth-global-header {
+  box-sizing: border-box;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 2rem 4rem;
+  padding: 2rem 6rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -65,29 +66,35 @@
   flex-direction: column;
   justify-content: flex-end; 
   padding: 4rem;
+  padding-left: 6rem;
+  padding-right: 2rem;
 }
+
 
 /* The Animation Engine */
 .welcome-text-wrapper {
-  max-width: 500px;
+  text-align: left;
+  max-width: 600px;
   animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  margin-bottom: 3rem;
 }
 
 @keyframes slideFadeUp {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(-15px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0px);
   }
 }
 
 .welcome-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(3rem, 4vw, 4.5rem);
-  font-weight: 300;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin-bottom: 1rem;
@@ -96,8 +103,8 @@
 .welcome-subtitle {
   font-family: 'Poppins', sans-serif;
   font-size: 1.25rem;
-  color: #9ca3af;
-  font-weight: 300;
+  color: #becfa8;
+  font-weight: 400;
   line-height: 1.6;
 }
 
@@ -119,7 +126,7 @@
   border-radius: 16px;
   padding: 2.5rem 2rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.247);
 }
 
 .auth-header {

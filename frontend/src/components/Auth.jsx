@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
+import logo from '../assets/logo.png';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,12 +20,7 @@ export default function Auth() {
       {/* Global Header */}
       <header className="auth-global-header">
         <Link to="/" className="brand-logo">
-          <svg className="brand-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C12 2 15 5 15 9C15 13 12 16 12 16C12 16 9 13 9 9C9 5 12 2 12 2Z" opacity="0.6"/>
-            <path d="M12 16C12 16 16 14 18 10C20 6 20 4 20 4C20 4 17 4 14 6C11 8 12 16 12 16Z" opacity="0.8"/>
-            <path d="M12 16C12 16 8 14 6 10C4 6 4 4 4 4C4 4 7 4 10 6C13 8 12 16 12 16Z" opacity="0.8"/>
-          </svg>
-          <span className="brand-text">Plethora</span>
+          <img src={logo} alt="Plethora Logo" className="brand-image" />
         </Link>
         
         <button onClick={() => navigate('/discover')} className="guest-link">
@@ -40,7 +36,7 @@ export default function Auth() {
             {isLogin ? "Welcome back to the community." : "Welcome to the community."}
           </h1>
           <p className="welcome-subtitle">
-            {isLogin ? "Pick up where you left off. The grid is listening." : "Offload the static. Leave the weight."}
+            {isLogin ? "Pick up where you left off. " : "Offload the weight. You aren't alone."}
           </p>
         </div>
       </div>
