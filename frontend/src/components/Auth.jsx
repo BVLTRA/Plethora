@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 import Logo from '../assets/logo.png';
+import { WovenLightHero } from './ui/woven-light-hero';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,7 +27,11 @@ export default function Auth() {
   const isSubmitDisabled = !isLogin && (!isAgeVerified || !isTermsAccepted);
 
   return (
+    
     <main className="auth-layout">
+      <div className="hero-canvas-wrapper">
+              <WovenLightHero />
+            </div>
       
       <header className="auth-global-header">
         <Link to="/" className="brand-logo">

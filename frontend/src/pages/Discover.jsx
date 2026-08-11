@@ -1,6 +1,7 @@
 import React from 'react';
 import StoryCard from '../components/ui/StoryCard';
 import './Discover.css';
+import { WovenLightHero } from '../components/ui/woven-light-hero';
 
 // Generated dummy data 
 const DUMMY_POSTS = [

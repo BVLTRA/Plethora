@@ -11,6 +11,18 @@
   color: #fff;
 }
 
+/* Background Layer */
+.hero-canvas-wrapper {
+  position: absolute;
+  top: 0;
+  opacity: 0.3;
+  right: 50%; 
+  width: 50vw; 
+  height: 100%;
+  z-index: 0; 
+  pointer-events: none; 
+}
+
 /* --- GLOBAL HEADER --- */
 .auth-global-header {
   box-sizing: border-box;
@@ -90,14 +102,14 @@
 .welcome-text-wrapper {
   text-align: left;
   max-width: 600px;
-  animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   margin-bottom: 3rem;
 }
 
 @keyframes slideFadeUp {
   from {
     opacity: 0;
-    transform: translateY(-15px);
+    transform: translateY(-25px);
   }
   to {
     opacity: 1;

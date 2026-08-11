@@ -7,7 +7,7 @@ export default function HeroSection() {
     <section className="hero-container">
       
       {/* Canvas, shoved to the right */}
-      <div className="hero-canvas-wrapper">
+      <div className="hero-canvas-wrapper-discover">
         <WovenLightHero />
       </div>
 
