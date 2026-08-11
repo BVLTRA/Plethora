@@ -8,6 +8,7 @@ import Share from './pages/Share';
 import Account from './pages/Account';
 import ReadStory from './pages/ReadStory';
 import Auth from './components/Auth';
+import Terms from './pages/Terms'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/share" element={<Share />} />
         <Route path="/account" element={<Account />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route path="/story/:id" element={<ReadStory />} />
       </Routes>

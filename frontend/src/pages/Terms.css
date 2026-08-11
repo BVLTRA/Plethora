@@ -1,0 +1,80 @@
+/* --- PAGE BACKGROUND & MASKING --- */
+.terms-page {
+  min-height: 100vh;
+  position: relative;
+  
+  /* 
+    The Horizontal Reading Column:
+    0% (Left Edge): Slightly darkened so it isn't blinding.
+    20%: Hits 95% opacity black.
+    80%: Holds that 95% black across the center text area.
+    100% (Right Edge): Fades back to the image.
+  */
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.4) 100%),
+    url('../assets/discoverBG.jpg'); /* Make sure this path points to the image you want */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
+}
+
+/* --- LOGO PLACEMENT --- */
+.terms-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2rem 4rem;
+  z-index: 10;
+}
+
+/* --- READING COLUMN --- */
+.terms-content-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 140px 2rem 6rem 2rem; /* Pushes text below the logo */
+}
+
+.terms-document {
+  width: 100%;
+  max-width: 720px; /* Constrains line length for optimal readability */
+}
+
+/* --- TYPOGRAPHY --- */
+.terms-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.terms-date {
+  font-family: 'Courier New', Courier, monospace;
+  color: #596f62; /* Granite */
+  font-size: 0.9rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terms-body section {
+  margin-bottom: 2.5rem;
+}
+
+.terms-body h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #c3d898; /* Tea Green to make headers pop slightly */
+  margin-bottom: 1rem;
+}
+
+.terms-body p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
