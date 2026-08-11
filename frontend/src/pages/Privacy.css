@@ -1,14 +1,9 @@
 /* --- PAGE BACKGROUND & MASKING --- */
-.terms-page {
+.privacy-page {
   min-height: 100vh;
   position: relative;
   
-  /* 
-    The Horizontal Reading Column Mechanism:
-    0% to 20%: Fades from semi-transparent to solid black.
-    20% to 80%: Creates the solid black reading void in the center.
-    80% to 100%: Fades back out to the image.
-  */
+  /* Horizontal Reading Column Mechanism */
   background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.5) 100%),
     url('../assets/discoverBG.jpg'); 
@@ -19,7 +14,7 @@
 }
 
 /* --- LOGO PLACEMENT --- */
-.terms-header {
+.privacy-header {
   position: absolute;
   top: 0;
   left: 0;
@@ -48,19 +43,19 @@
 }
 
 /* --- READING COLUMN --- */
-.terms-content-wrapper {
+.privacy-content-wrapper {
   display: flex;
   justify-content: center;
   padding: 140px 2rem 6rem 2rem; 
 }
 
-.terms-document {
+.privacy-document {
   width: 100%;
-  max-width: 800px; /* Constrains line length */
+  max-width: 800px;
 }
 
 /* --- TYPOGRAPHY --- */
-.terms-title {
+.privacy-title {
   font-family: 'Times New Roman', Times, serif;
   font-style: italic;
   font-size: clamp(2.5rem, 5vw, 4.5rem);
@@ -72,7 +67,7 @@
   text-align: left;
 }
 
-.terms-date {
+.privacy-date {
   font-family: 'Courier New', Courier, monospace;
   color: #596f62; /* Granite */
   text-align: left;
@@ -82,13 +77,12 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.terms-body section {
+.privacy-body section {
   margin-bottom: 3rem;
   text-align: justify;
-
 }
 
-.terms-body h2 {
+.privacy-body h2 {
   font-family: 'Poppins', sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
@@ -97,7 +91,7 @@
   letter-spacing: -0.01em;
 }
 
-.terms-body h3 {
+.privacy-body h3 {
   font-family: 'Poppins', sans-serif;
   font-size: 1.05rem;
   font-weight: 500;
@@ -106,7 +100,7 @@
   margin-bottom: 1rem;
 }
 
-.terms-body p {
+.privacy-body p {
   font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   font-weight: 300;
@@ -115,18 +109,18 @@
   margin-bottom: 1.25rem;
 }
 
-.terms-body strong {
+.privacy-body strong {
   font-weight: 500;
   color: #fff; /* Highlights key legal terms in pure white against the dimmed body text */
 }
 
-.terms-body ul {
+.privacy-body ul {
   list-style-type: none;
   padding: 0;
   margin-bottom: 1.5rem;
 }
 
-.terms-body li {
+.privacy-body li {
   font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   font-weight: 300;
@@ -137,8 +131,7 @@
   position: relative;
 }
 
-/* Custom minimal bullet points using Granite */
-.terms-body li::before {
+.privacy-body li::before {
   content: '';
   position: absolute;
   left: 0;
