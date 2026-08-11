@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './Privacy.css';
 import Logo from '../assets/logo.png';
 
@@ -8,10 +8,16 @@ export default function Privacy() {
     <main className="privacy-page">
       
       {/* Pinned Logo */}
-      <header className="privacy-header">
+      <header className="legal-header">
         <Link to="/" className="brand-logo">
           <img src={Logo} alt="Plethora Logo" className="brand-image" />
         </Link>
+
+        {/* The Navigation Pill */}
+        <nav className="legal-toggle">
+          <NavLink to="/terms" className="toggle-btn">Terms</NavLink>
+          <NavLink to="/privacy" className="toggle-btn">Privacy</NavLink>
+        </nav>
       </header>
 
       {/* The Central Reading Column */}

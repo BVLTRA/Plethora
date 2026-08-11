@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './Terms.css';
 import Logo from '../assets/logo.png'
 
@@ -8,10 +8,16 @@ export default function Terms() {
     <main className="terms-page">
       
       {/* Pinned Logo */}
-      <header className="terms-header">
+      <header className="legal-header">
         <Link to="/" className="brand-logo">
-          <img src={Logo}/>
+          <img src={Logo} alt="Plethora Logo" className="brand-image" />
         </Link>
+      
+        {/* The Navigation Pill */}
+        <nav className="legal-toggle">
+          <NavLink to="/terms" className="toggle-btn">Terms</NavLink>
+          <NavLink to="/privacy" className="toggle-btn">Privacy</NavLink>
+        </nav>
       </header>
 
       {/* The Central Reading Column */}

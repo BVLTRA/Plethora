@@ -10,7 +10,7 @@
     80% to 100%: Fades back out to the image.
   */
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.4) 100%),
     url('../assets/discoverBG.jpg'); 
   background-size: cover;
   background-position: center;
@@ -18,14 +18,7 @@
   color: #fff;
 }
 
-/* --- LOGO PLACEMENT --- */
-.terms-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 2rem 4rem;
-  z-index: 10;
-}
+
 
 .brand-logo {
   display: flex;

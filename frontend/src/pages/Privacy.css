@@ -3,9 +3,14 @@
   min-height: 100vh;
   position: relative;
   
-  /* Horizontal Reading Column Mechanism */
+  /* 
+    The Horizontal Reading Column Mechanism:
+    0% to 20%: Fades from semi-transparent to solid black.
+    20% to 80%: Creates the solid black reading void in the center.
+    80% to 100%: Fades back out to the image.
+  */
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 0.4) 100%),
     url('../assets/discoverBG.jpg'); 
   background-size: cover;
   background-position: center;
@@ -13,13 +18,56 @@
   color: #fff;
 }
 
-/* --- LOGO PLACEMENT --- */
-.privacy-header {
+/* --- HEADER --- */
+.legal-header {
+  box-sizing: border-box; /* Forces the 100% width to absorb the padding */
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   padding: 2rem 4rem;
+  display: flex;
+  justify-content: space-between; /* Logo left, Toggle right */
+  align-items: center;
   z-index: 10;
+}
+
+/* The Frosted Glass Pill Container */
+.legal-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background-color: rgba(250, 250, 250, 0.068);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(1px);
+  padding: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(215, 238, 179, 0.116);
+}
+
+.toggle-btn {
+  color: #596f62; /* Granite - inactive state */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  color: #c3d898; /* Tea Green */
+}
+
+/* 
+  The Active State:
+  Injected automatically by React Router when the URL matches.
+  Uses the off-white from your Auth button to create a solid physical switch.
+*/
+.toggle-btn.active {
+  background-color: #f2fce1; 
+  color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .brand-logo {
