@@ -27,17 +27,14 @@ export default function Auth() {
   const isSubmitDisabled = !isLogin && (!isAgeVerified || !isTermsAccepted);
 
   return (
-    
     <main className="auth-layout">
       <div className="hero-canvas-wrapper">
-              <WovenLightHero />
-            </div>
-      
+        <WovenLightHero />
+      </div>
       <header className="auth-global-header">
         <Link to="/" className="brand-logo">
           <img src={Logo} alt="Plethora Logo" className="brand-image" />
         </Link>
-        
       </header>
 
       <div className="auth-left">
@@ -46,7 +43,7 @@ export default function Auth() {
             {isLogin ? "Welcome back to the community." : "Welcome to the community."}
           </h1>
           <p className="welcome-subtitle">
-            {isLogin ? "Pick up where you left off." : "Offload the weight. Connect with others."}
+            {isLogin ? "Pick up where you left off. The grid is listening." : "Offload the weight. Connect with others."}
           </p>
         </div>
       </div>
@@ -67,24 +64,28 @@ export default function Auth() {
             >
               Sign Up
             </button>
+            {/* The sliding indicator */}
+            <div className={`auth-indicator ${isLogin ? 'login-active' : 'signup-active'}`}></div>
           </header>
 
           <form className="auth-form" onSubmit={handleSubmit}>
             
-            {/* Conditional Username Field */}
-            {!isLogin && (
-              <div className="input-group">
-                <label htmlFor="username">Username</label>
-                <input 
-                  type="text" 
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="unfiltered_node"
-                  required
-                />
+            {/* Animated Username Field */}
+            <div className={`expandable-field ${!isLogin ? 'visible' : ''}`}>
+              <div className="expandable-inner">
+                <div className="input-group no-margin">
+                  <label htmlFor="username">Username</label>
+                  <input 
+                    type="text" 
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="unfiltered_node"
+                    required={!isLogin} 
+                  />
+                </div>
               </div>
-            )}
+            </div>
 
             <div className="input-group">
               <label htmlFor="email">Email</label>
@@ -110,32 +111,34 @@ export default function Auth() {
               />
             </div>
 
-            {/* Conditional Agreements */}
-            {!isLogin && (
-              <div className="auth-agreements">
-                <div className="checkbox-group">
-                  <input 
-                    type="checkbox" 
-                    id="age-verify" 
-                    checked={isAgeVerified}
-                    onChange={(e) => setIsAgeVerified(e.target.checked)}
-                  />
-                  <label htmlFor="age-verify">I confirm that I am 13 years of age or older.</label>
-                </div>
-                
-                <div className="checkbox-group">
-                  <input 
-                    type="checkbox" 
-                    id="terms-verify" 
-                    checked={isTermsAccepted}
-                    onChange={(e) => setIsTermsAccepted(e.target.checked)}
-                  />
-                  <label htmlFor="terms-verify">
-                    I agree to the <Link to="/terms" target="_blank" rel="noopener noreferrer" className="terms-link">Terms of Use</Link>.
-                  </label>
+            {/* Animated Agreements */}
+            <div className={`expandable-field ${!isLogin ? 'visible' : ''}`}>
+              <div className="expandable-inner">
+                <div className="auth-agreements">
+                  <div className="checkbox-group">
+                    <input 
+                      type="checkbox" 
+                      id="age-verify" 
+                      checked={isAgeVerified}
+                      onChange={(e) => setIsAgeVerified(e.target.checked)}
+                    />
+                    <label htmlFor="age-verify">I confirm that I am 13 years of age or older.</label>
+                  </div>
+                  
+                  <div className="checkbox-group">
+                    <input 
+                      type="checkbox" 
+                      id="terms-verify" 
+                      checked={isTermsAccepted}
+                      onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                    />
+                    <label htmlFor="terms-verify">
+                      I agree to the <Link to="/terms" target="_blank" rel="noopener noreferrer" className="terms-link">Terms of Use</Link>.
+                    </label>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
 
             <button type="submit" className="btn-primary" disabled={isSubmitDisabled}>
               {isLogin ? 'Initialize Session' : 'Create Node'}
@@ -156,14 +159,18 @@ export default function Auth() {
               </svg>
               Google
             </button>
-          </div>          
+          </div>
+
         </div>
+
         <div className="guest-link-wrapper">
           <button onClick={() => navigate('/discover')} className="guest-link">
             Continue as guest
           </button>
         </div>
+
       </div>
+
     </main>
   );
 }

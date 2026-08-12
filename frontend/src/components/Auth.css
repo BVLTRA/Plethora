@@ -102,7 +102,7 @@
 .welcome-text-wrapper {
   text-align: left;
   max-width: 600px;
-  animation: slideFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideFadeUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
   margin-bottom: 3rem;
 }
 
@@ -158,14 +158,14 @@
 }
 
 .auth-header {
+  position: relative;
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 0.5rem;
 }
 
 .auth-toggle {
+  flex: 1; 
   background: none;
   border: none;
   color: #596f62; 
@@ -173,9 +173,8 @@
   font-size: 1.25rem;
   font-weight: 400;
   cursor: pointer;
-  padding: 0;
-  transition: color 0.2s ease;
-  position: relative;
+  padding: 0 0 0.75rem 0;
+  transition: color 0.3s ease;
 }
 
 .auth-toggle:hover {
@@ -186,26 +185,55 @@
   color: #fff;
 }
 
-.auth-toggle.active::after {
-  content: '';
+
+.auth-indicator {
   position: absolute;
-  bottom: -9px;
+  bottom: -1px;
   left: 0;
-  width: 100%;
+  width: 50%;
   height: 2px;
   background-color: #7ea16b; 
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-indicator.signup-active {
+  transform: translateX(100%);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 0rem;
+  gap: 0.2rem;
+  margin-bottom: 1rem;
+}
+
+.input-group.no-margin {
+  margin-bottom: 0;
+}
+
+.expandable-field {
+  display: grid;
+  grid-template-rows: 0fr; 
+  opacity: 0;
+  overflow: hidden;
+  transition: 
+    grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+    opacity 0.3s ease;
+}
+
+.expandable-field.visible {
+  grid-template-rows: 1fr; /* Allow browser to animate to 'auto' height */
+  opacity: 1;
+}
+
+.expandable-inner {
+  min-height: 0; /* Vital: Tells the grid transition what its baseline is */
+  padding-bottom: 1.5rem; /* Replaces the margin-bottom missing from the wrapper */
 }
 
 .input-group label {
@@ -309,8 +337,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  margin-top: -0.5rem; 
-  margin-bottom: 0.5rem;
 }
 
 .checkbox-group {
