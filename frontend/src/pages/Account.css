@@ -46,7 +46,7 @@
 }
 
 .profile-username {
-  color: #7ea16b; /* Sage Green */
+  color: #91cc72; /* Sage Green */
   font-family: 'Courier New', Courier, monospace;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 500;

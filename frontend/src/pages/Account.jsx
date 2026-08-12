@@ -5,7 +5,7 @@ import './Account.css';
 // System-level dummy data
 const USER_DATA = {
   username: 'unfiltered_node',
-  bio: 'Just trying to keep the buffer from overflowing. 99% static, 1% signal.',
+  bio: '"Just trying to keep the buffer from overflowing. 99% static, 1% signal."',
   lastActive: '14 minutes ago'
 };
 
