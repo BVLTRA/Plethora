@@ -102,7 +102,7 @@
 .welcome-text-wrapper {
   text-align: left;
   max-width: 600px;
-  animation: slideFadeUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  animation: slideFadeUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
   margin-bottom: 3rem;
 }
 
