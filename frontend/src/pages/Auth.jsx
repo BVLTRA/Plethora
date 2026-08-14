@@ -18,9 +18,52 @@ export default function Auth() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`Submitting ${isLogin ? 'Login' : 'Signup'} for:`, email);
+
+    if (!isLogin) {
+      // --- SIGNUP PROCESS ---
+      try {
+        // Send data to backend port
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            username: username, 
+            email: email, 
+            password: password 
+          })
+        });
+
+        // Extract response backend
+        const data = await response.json();
+
+        // 3. Check HTTP status code
+        if (response.ok) {
+          // Success! Clear form and switch UI toLogin screen
+          window.alert("Account created. You may now log in.");
+          setUsername('');
+          setEmail('');
+          setPassword('');
+          setIsAgeVerified(false);
+          setIsTermsAccepted(false);
+          setIsLogin(true); 
+        } else {
+          // Backend rejected request (duplicate email or username)
+          window.alert(`Transmission failed: ${data.error}`);
+        }
+
+      } catch (error) {
+        console.error("Network error:", error);
+        window.alert("Could not connect to the backend server.");
+      }
+
+    } else {
+      // --- LOGIN PROCESS ---
+      console.log("Login firing for:", email);
+    }
   };
 
   // The button is disabled if it's a Signup AND they haven't checked both boxes
