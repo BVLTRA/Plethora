@@ -33,6 +33,38 @@ app.get('/api/status', async (req, res) => {
   }
 });
 
+// --- USER SIGNUP ENDPOINT ---
+app.post('/api/signup', async (req, res) => {
+  // Collect react data
+  const { username, email, password } = req.body;
+
+  try {
+    // Write to database. 
+    // Question marks are a security feature to prevent SQL Injection attacks. (research more about this)
+    // HEYYYY POOKIEEEE: Dont forget to hash password using library [ pref 'bcrypt'] before publishing!
+    const [result] = await db.query(
+      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
+      [username, email, password]
+    );
+
+    // Send success signal back to React
+    res.status(201).json({ 
+      message: 'User created successfully.', 
+      userId: result.insertId 
+    });
+
+  } catch (error) {
+    console.error("Database Error:", error);
+    
+    // Handle duplicates
+    if (error.code === 'ER_DUP_ENTRY') {
+       return res.status(400).json({ error: 'Username or email already exists in the grid.' });
+    }
+    
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // Start up server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
