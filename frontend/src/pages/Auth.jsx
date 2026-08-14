@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 import Logo from '../assets/logo.png';
-import { WovenLightHero } from './ui/woven-light-hero';
+import { WovenLightHero } from '../components/ui/woven-light-hero';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
