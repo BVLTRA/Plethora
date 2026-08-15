@@ -65,6 +65,42 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
+// --- USER LOGIN ENDPOINT ---
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find email
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+
+    // If email does not exist
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Node not found. Check your email.' });
+    }
+
+    const user = rows[0];
+
+    // NOTE: For now, I'm storing them raw... dont forget to hash.
+    if (user.password_hash !== password) {
+      return res.status(401).json({ error: 'Invalid credentials. Access denied.' });
+    }
+
+    // Success: Return userdata to frontend
+    res.status(200).json({
+      message: 'Session initialized.',
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email
+      }
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // Start up server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
