@@ -37,7 +37,7 @@ export default function Auth() {
           })
         });
 
-        // Extract response backend
+        // Extract response from backend
         const data = await response.json();
 
         // 3. Check HTTP status code
@@ -61,8 +61,40 @@ export default function Auth() {
       }
 
     } else {
-      // --- LOGIN PROCESS ---
-      console.log("Login firing for:", email);
+      // --- LOGIN MECHANISM ---
+      try {
+        // Send data to backend port
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            email: email, 
+            password: password 
+          })
+        });
+
+        // Extract response from backend
+        const data = await response.json();
+
+        // Process backend response
+        if (response.ok) {
+          window.alert(`Welcome back, ${data.user.username}`);
+          
+          // For now, this just boots them to the discover page.
+          // Later, we will store data.user.id in React Context so the app remembers who they are.
+          navigate('/discover'); 
+          
+        } else {
+          // Backend rejected login (wrong password or email)
+          window.alert(`Authentication failed: ${data.error}`);
+        }
+
+      } catch (error) {
+        console.error("Network error:", error);
+        window.alert("Could not connect to the backend server.");
+      }
     }
   };
 
