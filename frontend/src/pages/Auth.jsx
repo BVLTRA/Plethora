@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 import './Auth.css';
 import Logo from '../assets/logo.png';
 import { WovenLightHero } from '../components/ui/woven-light-hero';
@@ -97,6 +98,33 @@ export default function Auth() {
       }
     }
   };
+
+  const handleGoogleAuth = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Send Google token to backend
+        const response = await fetch('http://localhost:5000/api/google-auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: tokenResponse.access_token })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          window.alert(`Google Auth successful! Welcome, ${data.user.username}`);
+          navigate('/discover');
+        } else {
+          window.alert(`Google Auth failed: ${data.error}`);
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+      }
+    },
+    onError: () => {
+      console.error('Google Login Failed');
+    }
+  });
 
   // The button is disabled if it's a Signup AND they haven't checked both boxes
   const isSubmitDisabled = !isLogin && (!isAgeVerified || !isTermsAccepted);
@@ -225,7 +253,7 @@ export default function Auth() {
           </div>
 
           <div className="oauth-group">
-            <button className="btn-oauth" type="button">
+            <button className="btn-oauth" type="button" onClick={() => handleGoogleAuth()}>
               <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
