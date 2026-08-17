@@ -13,7 +13,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        {/* Wrap the app so global state is available everywhere */}
         <AuthProvider>
           <App />
         </AuthProvider>
