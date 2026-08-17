@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 import Logo from '../assets/logo.png';
 
 export default function Navbar() {
   const location = useLocation();
+  const { user } = useAuth();
 
   if (location.pathname === '/auth' || location.pathname === '/terms' || location.pathname === '/privacy') {
     return null; 
@@ -29,9 +31,11 @@ export default function Navbar() {
       </div>
 
       {/* Right Column: Account */}
-      <div className="nav-group nav-right">
-        <NavLink to="/account" className="nav-link">Account</NavLink>
-        <NavLink to="/auth" className="nav-link">Login</NavLink>
+      <div className="nav-group nav-right">{user ? (
+          <NavLink to="/account" className="nav-link">Account</NavLink>
+        ) : (
+          <NavLink to="/login" className="nav-link">Sign In</NavLink>
+        )}
       </div>
 
     </nav>

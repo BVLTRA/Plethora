@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
+import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 import Logo from '../assets/logo.png';
 import { WovenLightHero } from '../components/ui/woven-light-hero';
 
 export default function Auth() {
+  const { login } = useAuth();
+  
   const [isLogin, setIsLogin] = useState(true);
   
   // Form State
@@ -83,8 +86,7 @@ export default function Auth() {
         if (response.ok) {
           window.alert(`Welcome back, ${data.user.username}`);
           
-          // For now, this just boots them to the discover page.
-          // Later, we will store data.user.id in React Context so the app remembers who they are.
+          login(data.user);
           navigate('/discover'); 
           
         } else {
