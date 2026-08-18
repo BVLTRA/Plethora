@@ -3,6 +3,7 @@
 <img src="./frontend/public/og-preview.gif" alt="Header image" width="100%" height="auto">
 
 **Current Build:** v1.0.0-alpha or something (August 2026)
+
 **State:** Under development
 
 ## Description
@@ -210,4 +211,7 @@ plethora/
 ## License & Contact
 
 Designed and developed by **BVLTRA**. 
-Pretoria, Gauteng, South Africa.
+
+This project's license is to be determined.
+
+
