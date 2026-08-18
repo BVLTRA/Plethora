@@ -208,10 +208,17 @@ plethora/
 
 ---
 
-## License & Contact
+## License & Usage
 
-Designed and developed by **BVLTRA**. 
+**Source-Available / Personal Use Only**
 
-This project's license is to be determined.
+This project is NOT open-source. You are welcome to clone the repository, inspect the code, and run it locally on your own machine for personal study and experimentation. 
 
+However, you may **not**:
+- Host or deploy this application publicly.
+- Monetize or use it for commercial purposes.
+- Present it as part of an educational curriculum, bootcamp, or workshop.
+- Reskin the UI and claim it as your own work.
 
+See the [LICENSE](LICENSE) file for the full legal terms. 
+Copyright (c) 2026 [BVLTRA](https://github.com/BVLTRA). All rights reserved.
