@@ -212,12 +212,12 @@ plethora/
 
 **Source-Available / Personal Use Only**
 
-This project is NOT open-source. You are welcome to clone the repository, inspect the code, and run it locally on your own machine for personal study and experimentation. 
+This project is NOT open-source. You are welcome to clone the repository, inspect the code, and run it locally on your own machine for personal study, examination and experimentation. 
 
 However, you may **not**:
 - Host or deploy this application publicly.
 - Monetize or use it for commercial purposes.
-- Present it as part of an educational curriculum, bootcamp, or workshop.
+- Unless permitted, present it as part of an educational curriculum, bootcamp, or workshop.
 - Reskin the UI and claim it as your own work.
 
 See the [LICENSE](LICENSE) file for the full legal terms. 
