@@ -44,6 +44,7 @@ export default function Auth() {
         // Extract response from backend
         const data = await response.json();
 
+
         // 3. Check HTTP status code
         if (response.ok) {
           // Success! Clear form and switch UI toLogin screen
@@ -82,8 +83,12 @@ export default function Auth() {
         // Extract response from backend
         const data = await response.json();
 
+        
+        console.log("[Auth] Envelope received from backend:", data);
+
         // Process backend response
         if (response.ok) {
+
           window.alert(`Welcome back, ${data.user.username}`);
           
           login(data.user);
