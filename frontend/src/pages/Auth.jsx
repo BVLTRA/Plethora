@@ -119,6 +119,10 @@ export default function Auth() {
         const data = await response.json();
 
         if (response.ok) {
+
+          login(data.user);
+          console.log("[Auth] Google Auth successful! User data:", data.user);
+          
           window.alert(`Google Auth successful! Welcome, ${data.user.username}`);
           navigate('/discover');
         } else {
