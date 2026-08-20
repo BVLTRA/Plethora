@@ -119,14 +119,17 @@ export default function Auth() {
         const data = await response.json();
 
         if (response.ok) {
+          if (data.isNewUser) {
+            // Intercept and route to completion, carrying the Google data in memory
+            navigate('/complete-account', { state: { googleData: data.googleData } });
 
-          login(data.user);
-          console.log("[Auth] Google Auth successful! User data:", data.user);
-          
-          window.alert(`Google Auth successful! Welcome, ${data.user.username}`);
-          navigate('/discover');
-        } else {
-          window.alert(`Google Auth failed: ${data.error}`);
+          } else {
+            // Normal login
+            login(data.user); 
+            console.log("[Auth] Google Auth successful! User data:", data.user);
+            window.alert(`Welcome back, ${data.user.username}`);
+            navigate('/discover');
+          }
         }
       } catch (error) {
         console.error("Network error:", error);

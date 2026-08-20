@@ -9,6 +9,7 @@ import Share from './pages/Share';
 import Account from './pages/Account';
 import ReadStory from './pages/ReadStory';
 import Auth from './pages/Auth';
+import CompleteAccount from './pages/CompleteAccount';
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy';
 
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/share" element={<Share />} />
         <Route path="/account" element={<Account />} />
         <Route path="/login" element={<Auth />} />
+        <Route path="/complete-account" element={<CompleteAccount />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
 
