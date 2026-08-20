@@ -101,62 +101,65 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// --- GOOGLE AUTH ENDPOINT ---
+// --- GOOGLE AUTH ENDPOINTS ---
+// --- GOOGLE PART 1NEEE: ACCOUNT CREATION/LOGIN ---
 app.post('/api/google-auth', async (req, res) => {
   const { accessToken } = req.body;
 
   try {
-    // Query Google directly to verify the token and get the user's profile
     const googleResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     
-    if (!googleResponse.ok) {
-      return res.status(401).json({ error: 'Invalid Google token.' });
-    }
+    if (!googleResponse.ok) return res.status(401).json({ error: 'Invalid Google token.' });
 
     const profile = await googleResponse.json();
     const googleEmail = profile.email;
-    const googleName = profile.name.replace(/\s+/g, '_').toLowerCase(); // Formats e.g. "John Doe" to "john_doe"
 
-    // Check if this email already exists in database
+    // Check if they exist
     const [existingUsers] = await db.query('SELECT * FROM users WHERE email = ?', [googleEmail]);
 
-    let user;
-
     if (existingUsers.length > 0) {
-      // PROCESS: LOG IN
-      // User exists. Log user in.
-      user = existingUsers[0];
+      // EXISTING USER: Log in normally
+      return res.status(200).json({
+        isNewUser: false,
+        message: 'Session initialized.',
+        user: existingUsers[0]
+      });
     } else {
-      // PROCESS: SIGN UP
-      // User doesn't exist. Insert new row without password.
-      const [insertResult] = await db.query(
-        'INSERT INTO users (username, email, password_hash) VALUES (?, ?, NULL)',
-        [googleName, googleEmail]
-      );
-      
-      // Construct user object from new insert
-      user = {
-        id: insertResult.insertId,
-        username: googleName,
-        email: googleEmail
-      };
+      // NEW USER: Pause process and send data back to React
+      return res.status(202).json({
+        isNewUser: true,
+        message: 'Additional details required.',
+        googleData: { email: googleEmail, name: profile.name }
+      });
     }
-
-    // Give session back to React
-    res.status(200).json({
-      message: 'Google authentication successful.',
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    });
-
   } catch (error) {
     console.error("Google Auth Error:", error);
-    res.status(500).json({ error: 'Internal server error during Google Auth.' });
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// --- GOOGLE PART 2WOO: GOOGLE FINAL SIGNUP (IF CREATING) ---
+app.post('/api/google-signup', async (req, res) => {
+  const { email, username } = req.body;
+
+  try {
+    // Insert new user (Real name is intentionally discarded)
+    const [insertResult] = await db.query(
+      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, NULL)',
+      [username, email]
+    );
+    
+    res.status(201).json({
+      message: 'Account created successfully.',
+      user: { id: insertResult.insertId, username, email }
+    });
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+       return res.status(400).json({ error: 'Username already exists in the grid.' });
+    }
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
 
