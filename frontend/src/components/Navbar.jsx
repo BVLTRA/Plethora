@@ -8,6 +8,8 @@ export default function Navbar() {
   const location = useLocation();
   const { user } = useAuth();
 
+  console.log("[Navbar] Current user state is:", user);
+
   if (location.pathname === '/auth' || location.pathname === '/terms' || location.pathname === '/privacy') {
     return null; 
   }
