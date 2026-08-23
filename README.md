@@ -1,4 +1,4 @@
-# PLETHORA // Public Diary
+# Plethora // Public Diary
 
 <img src="./frontend/public/og-preview.gif" alt="Header image" width="100%" height="auto">
 
@@ -18,11 +18,11 @@ Rather than siloing user data or encouraging curated highlight reels, Plethora f
 
 This architecture was shaped by three specific constraints that dictate both the system's structure and the user's psychology:
 
-*   **The Human Truth: "No one should do this alone"**
+*   **Human Truth: "No one should do this alone"**
     This is the foundation of the platform. Plethora exists because carrying things in isolation is inherently heavy. The app provides a space to externalize internal weight.
-*   **The Behavioral Twist: "Every action is publicly visible"**
+*   **Behavioral Twist: "Every action is publicly visible"**
     Total anonymity meets total exposure. When an issue is uploaded, it isn't locked away; it is thrust out into the open. You are completely unnamed, but you are entirely perceived. This creates a strange, shared vulnerability—everyone is speaking into the void, but the void is watching back.
-*   **The Build Constraint: "There is no search bar"**
+*   **Build Constraint: "There is no search bar"**
     This is the most critical structural mechanism of the app. By removing the ability to search, we remove the user's ability to curate, filter, or hunt for specific content. You cannot seek out people who share your exact problem. Instead, you are confronted with a collective, uncurated stream of human experience exactly as it arrives. It forces serendipity, demands presence, and prevents the platform from becoming a tool for confirmation bias.
 
 ---
@@ -114,7 +114,7 @@ Create `.env` files in both the `frontend` and `backend` directories. Ensure the
 | `PORT` | Server port | `5000` |
 | `DB_HOST` | Database host | `localhost` |
 | `DB_USER` | MySQL Username | `root` |
-| `DB_PASSWORD` | MySQL Password | *(Leave blank if using default XAMPP)* |
+| `DB_PASSWORD` | MySQL Password | ** |
 | `DB_NAME` | Database container | `plethora` |
 
 **In `frontend/.env`:**
