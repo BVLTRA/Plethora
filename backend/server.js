@@ -85,6 +85,8 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials. Access denied.' });
     }
 
+    await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
+    
     // Success: Return userdata to frontend
     res.status(200).json({
       message: 'Session initialized.',
@@ -120,6 +122,9 @@ app.post('/api/google-auth', async (req, res) => {
     const [existingUsers] = await db.query('SELECT * FROM users WHERE email = ?', [googleEmail]);
 
     if (existingUsers.length > 0) {
+
+      await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [existingUsers[0].id]);
+
       // EXISTING USER: Log in normally
       return res.status(200).json({
         isNewUser: false,
@@ -211,6 +216,70 @@ app.get('/api/account/:id', async (req, res) => {
   } catch (error) {
     console.error("Aggregation Error:", error);
     res.status(500).json({ error: 'Failed to retrieve node data.' });
+  }
+});
+
+app.post('/api/entries', async (req, res) => {
+  const { userId, title, content, status } = req.body; // status dictates 'draft' or 'published'
+
+  try {
+    // Log entry into the database
+    const [result] = await db.query(
+      'INSERT INTO entries (user_id, title, content, status) VALUES (?, ?, ?, ?)',
+      [userId, title, content, status]
+    );
+
+    // CLOCK UPDATE
+    await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
+
+    res.status(201).json({ message: 'Entry logged successfully.', entryId: result.insertId });
+  } catch (error) {
+    console.error("Entry Error:", error);
+    res.status(500).json({ error: 'Failed to log entry.' });
+  }
+});
+
+app.post('/api/comments', async (req, res) => {
+  const { userId, entryId, content } = req.body;
+
+  try {
+    // Log response
+    await db.query(
+      'INSERT INTO comments (user_id, entry_id, content, status) VALUES (?, ?, ?, "published")',
+      [userId, entryId, content]
+    );
+
+    // CLOCK UPDATE 
+    await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
+
+    res.status(201).json({ message: 'Response broadcasted.' });
+  } catch (error) {
+    console.error("Comment Error:", error);
+    res.status(500).json({ error: 'Failed to broadcast response.' });
+  }
+});
+
+app.post('/api/likes', async (req, res) => {
+  const { userId, entryId } = req.body;
+
+  try {
+    // Create link between user and entry
+    await db.query(
+      'INSERT INTO likes (user_id, entry_id) VALUES (?, ?)',
+      [userId, entryId]
+    );
+
+    // CLOCK UPDATE
+    await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
+
+    res.status(201).json({ message: 'Signal acknowledged.' });
+  } catch (error) {
+    // Prevent crashes if they try to like something twice
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'Already acknowledged.' });
+    }
+    console.error("Like Error:", error);
+    res.status(500).json({ error: 'Failed to acknowledge signal.' });
   }
 });
 
