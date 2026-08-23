@@ -165,3 +165,22 @@
   font-size: 0.9rem;
 }
 
+/* --- DISCONNECT BUTTON --- */
+.btn-disconnect {
+  margin-top: 1rem;
+  background: transparent;
+  border: 1px solid rgba(89, 111, 98, 0.4); /* Granite border */
+  color: #596f62;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-disconnect:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #c9e7c8d8;
+  color: #c9e7c8d8;
+}

@@ -92,7 +92,7 @@ export default function Account() {
           <p className="profile-bio">"Just trying to keep the buffer from overflowing. 99% static, 1% signal."</p>
 
           <button onClick={handleSignOut} className="btn-disconnect">
-            Disconnect Node
+            Disconnect Account
           </button>
         </div>
       </header>
