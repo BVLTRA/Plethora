@@ -80,7 +80,7 @@ export default function Share() {
           <input 
             type="text"
             className="story-title"
-            placeholder="Name this fragment (optional)..."
+            placeholder="Untitled"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             spellCheck="false"
@@ -89,7 +89,7 @@ export default function Share() {
           {/* Body Textarea */}
           <textarea 
             className="story-editor"
-            placeholder="Type into the void..."
+            placeholder="Type out what feels right to you..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
             spellCheck="false"
