@@ -4,13 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import './Account.css';
 
-    { id: 201, username: 'signal_noise', title: 'Muscle Memory', excerpt: 'It’s been four months since the last text, but opening our chat is still pure muscle memory at this point.' },
-    { id: 202, username: 'ghost_variable', title: 'Corporate Scripts', excerpt: 'If I have to hear "let\'s circle back" or "synergize" one more time today, I\'m going to lose my mind.' }
-  ],
-  commented: [
-    { id: 301, username: 'buffer_underrun', title: 'Dopamine Deficit', excerpt: 'I literally can’t watch a ten-minute video anymore without opening three other tabs or picking up my phone.' }
-  ]
-};
 export default function Account() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
