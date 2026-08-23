@@ -163,6 +163,57 @@ app.post('/api/google-signup', async (req, res) => {
   }
 });
 
+// --- ACCOUNT AGGREGATION ENDPOINT ---
+app.get('/api/account/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Fetch user profile (leave the password)
+    const [user] = await db.query(
+      'SELECT username, created_at FROM users WHERE id = ?', 
+      [userId]
+    );
+
+    if (user.length === 0) {
+      return res.status(404).json({ error: 'Node not found.' });
+    }
+
+    // Fetch published entries
+    const [entries] = await db.query(
+      'SELECT id, title, content, created_at FROM entries WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
+      [userId]
+    );
+
+    // Fetch published responses (comments)
+    const [responses] = await db.query(
+      'SELECT id, entry_id, content, created_at FROM comments WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
+      [userId]
+    );
+
+    // Fetch entries they have liked by joining the likes table with the entries table
+    const [likes] = await db.query(
+      `SELECT e.id, e.title, e.content, l.created_at AS liked_at 
+       FROM likes l 
+       JOIN entries e ON l.entry_id = e.id 
+       WHERE l.user_id = ? 
+       ORDER BY l.created_at DESC`, 
+      [userId]
+    );
+
+    // Combine and send
+    res.status(200).json({
+      profile: user[0],
+      entries: entries,
+      responses: responses,
+      likes: likes
+    });
+
+  } catch (error) {
+    console.error("Aggregation Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve node data.' });
+  }
+});
+
 // Start up server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
