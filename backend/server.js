@@ -86,7 +86,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
-    
+
     // Success: Return userdata to frontend
     res.status(200).json({
       message: 'Session initialized.',
@@ -175,9 +175,9 @@ app.get('/api/account/:id', async (req, res) => {
   try {
     // Fetch user profile (leave the password)
     const [user] = await db.query(
-      'SELECT username, created_at FROM users WHERE id = ?', 
-      [userId]
-    );
+    'SELECT username, created_at, last_active FROM users WHERE id = ?', 
+    [userId]
+     );
 
     if (user.length === 0) {
       return res.status(404).json({ error: 'Node not found.' });

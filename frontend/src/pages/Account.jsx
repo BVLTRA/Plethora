@@ -4,6 +4,29 @@ import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import './Account.css';
 
+// Time Algorithm
+const calculateTimeAgo = (timestamp) => {
+  if (!timestamp) return 'Status unknown';
+
+  const now = new Date();
+  const past = new Date(timestamp);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+
+  if (diffInSeconds < 60) return 'Active right now';
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+
+  // If it's been more than a week, just show the date
+  return past.toLocaleDateString();
+};
+
 export default function Account() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -84,8 +107,17 @@ export default function Account() {
           <div className="profile-readout">
             <h1 className="profile-username">@{accountData.profile.username}</h1>
             <div className="profile-status">
-              <span className="status-indicator"></span>
-              <span className="status-text">Status: Connected</span>
+              {/* If they are active right now, the indicator glows green. Otherwise, it dims to gray */}
+              <span 
+                className="status-indicator" 
+                style={{ 
+                  backgroundColor: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '#91cc72' : '#596f62',
+                  boxShadow: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '0 0 8px rgba(145, 204, 114, 0.5)' : 'none'
+                }}
+              ></span>
+              <span className="status-text">
+                {calculateTimeAgo(accountData.profile.last_active)}
+              </span>
             </div>
           </div>
           
