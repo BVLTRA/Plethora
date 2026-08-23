@@ -1,37 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; 
 import './Share.css';
 
 export default function Share() {
-  const [content, setContent] = useState('');
+  const { user } = useAuth(); 
   const navigate = useNavigate();
 
-  // TEMP STATE HANDLER:
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Security: Redirect disconnected users
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  // Unified transmission engine
+  const submitEntry = async (status) => {
+    if (!content.trim()) {
+      window.alert("You cannot broadcast empty static.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/entries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          title: title.trim(), 
+          content: content.trim(),
+          status: status 
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        navigate('/account');
+      } else {
+        window.alert(`Transmission failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      window.alert("The grid is currently unresponsive.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleClear = () => {
-    if (window.confirm("Delete this draft? (fyi Talya said this is bad bad.. dont forget")) {
+    if (window.confirm("Delete this draft? (fyi Talya said this is bad bad.. dont forget)")) {
+      setTitle('');
       setContent('');
     }
   };
 
-  const handleDraft = () => {
-    window.alert("Drafted");
-    setContent('');
-  };
+  if (!user) return null; 
 
   return (
     <main className="share-page">
       <div className="share-container">
         
-        {/* Header Section */}
         <header className="share-header">
           <h1 className="share-title">Share your story</h1>
           <h2 className="share-username">
-            "<span className="username-text">@unfiltered_node</span>"
+            "<span className="username-text">@{user.username}</span>"
           </h2>
         </header>
 
         {/* Editor Section */}
         <div className="editor-wrapper">
+          {/* Title Input */}
+          <input 
+            type="text"
+            className="story-title"
+            placeholder="Name this fragment (optional)..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            spellCheck="false"
+          />
+
+          {/* Body Textarea */}
           <textarea 
             className="story-editor"
             placeholder="Type into the void..."
@@ -46,6 +101,7 @@ export default function Share() {
           <button 
             className="icon-btn delete-btn" 
             onClick={handleClear}
+            disabled={isSubmitting}
             aria-label="Delete draft"
             title="Delete draft"
           >
@@ -55,10 +111,21 @@ export default function Share() {
           </button>
 
           <div className="primary-actions">
-            <button className="btn-outline" onClick={handleDraft}>
-              Save Draft
+            <button 
+              className="btn-outline" 
+              onClick={() => submitEntry('draft')}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Saving...' : 'Save Draft'}
             </button>
-            <button className="btn-solid">Upload</button>
+            
+            <button 
+              className="btn-solid" 
+              onClick={() => submitEntry('published')}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Uploading...' : 'Upload'}
+            </button>
           </div>
         </div>
 

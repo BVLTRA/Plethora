@@ -96,7 +96,7 @@
 
   font-size: 1.125rem;
   line-height: 1.7;
-  padding: 3rem 2rem 2rem 2rem;
+  padding: 0.5rem 2rem 2rem 2rem; 
   resize: none;
 }
 
@@ -115,6 +115,22 @@
 .story-editor {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.story-title {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px; 
+  font-weight: 500;
+  padding: 3rem 2rem 0.5rem 2rem;
+  outline: none;
+}
+
+.story-title::placeholder {
+  color: #596f62; /* Granite */
 }
 
 /* Action Bar */
