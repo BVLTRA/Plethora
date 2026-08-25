@@ -81,18 +81,18 @@
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
   
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%);
   
   margin-bottom: 2rem;
   transition: border-color 0.3s ease;
 }
 
 .editor-wrapper:focus-within {
-  border-color: rgba(28, 49, 68, 0.8); /* Deep Space Blue focus state */
+  border-color: rgba(54, 68, 42, 0.8); /* Deep Space Blue focus state */
 }
 
 .story-editor {
