@@ -113,7 +113,7 @@ export default function Account() {
               <span 
                 className="status-indicator" 
                 style={{ 
-                  backgroundColor: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '#91cc72' : '#596f62',
+                  backgroundColor: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '#749666' : '#749666',
                   boxShadow: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '0 0 8px rgba(145, 204, 114, 0.5)' : 'none'
                 }}
               ></span>
