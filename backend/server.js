@@ -185,8 +185,13 @@ app.get('/api/account/:id', async (req, res) => {
 
     // Fetch published entries
     const [entries] = await db.query(
-      'SELECT id, title, content, created_at FROM entries WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
-      [userId]
+      `SELECT e.id, e.title, e.content, e.created_at, 
+              IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+       FROM entries e 
+       LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+       WHERE e.user_id = ? AND e.status = "published" 
+       ORDER BY e.created_at DESC`, 
+      [userId, userId] 
     );
 
     // Fetch published responses (comments)
@@ -272,14 +277,67 @@ app.post('/api/likes', async (req, res) => {
     // CLOCK UPDATE
     await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
 
-    res.status(201).json({ message: 'Signal acknowledged.' });
+    res.status(201).json({ message: 'Entry acknowledged.' });
   } catch (error) {
     // Prevent crashes if they try to like something twice
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'Already acknowledged.' });
     }
     console.error("Like Error:", error);
-    res.status(500).json({ error: 'Failed to acknowledge signal.' });
+    res.status(500).json({ error: 'Failed to acknowledge entry.' });
+  }
+});
+
+// --- REMOVE ACKNOWLEDGEMENT (UN-LIKE) ---
+app.delete('/api/likes', async (req, res) => {
+  const { userId, entryId } = req.body;
+  try {
+    await db.query('DELETE FROM likes WHERE user_id = ? AND entry_id = ?', [userId, entryId]);
+    res.status(200).json({ message: 'Signal severed.' });
+  } catch (error) {
+    console.error("Unlike Error:", error);
+    res.status(500).json({ error: 'Failed to sever signal.' });
+  }
+});
+
+// --- DISCOVER FEED ENDPOINT ---
+app.get('/api/discover', async (req, res) => {
+  const userId = req.query.userId; // Check if a specific user is asking for the feed
+
+  try {
+    let query;
+    let params = [];
+
+    if (userId) {
+      // If a user is logged in, cross-reference the 'likes' table to see what they have acknowledged
+      query = `
+        SELECT e.id, e.title, e.content, e.created_at, u.username,
+               IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+        FROM entries e 
+        JOIN users u ON e.user_id = u.id 
+        LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+        WHERE e.status = 'published' 
+        ORDER BY e.created_at DESC 
+        LIMIT 100
+      `;
+      params = [userId];
+    } else {
+      // If it's a guest, just pull the feed normally
+      query = `
+        SELECT e.id, e.title, e.content, e.created_at, u.username, false AS is_liked_by_user
+        FROM entries e 
+        JOIN users u ON e.user_id = u.id 
+        WHERE e.status = 'published' 
+        ORDER BY e.created_at DESC 
+        LIMIT 100
+      `;
+    }
+
+    const [entries] = await db.query(query, params);
+    res.status(200).json(entries);
+  } catch (error) {
+    console.error("Discover Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve the global grid.' });
   }
 });
 
