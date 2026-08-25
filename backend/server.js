@@ -185,8 +185,13 @@ app.get('/api/account/:id', async (req, res) => {
 
     // Fetch published entries
     const [entries] = await db.query(
-      'SELECT id, title, content, created_at FROM entries WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
-      [userId]
+      `SELECT e.id, e.title, e.content, e.created_at, 
+              IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+       FROM entries e 
+       LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+       WHERE e.user_id = ? AND e.status = "published" 
+       ORDER BY e.created_at DESC`, 
+      [userId, userId] 
     );
 
     // Fetch published responses (comments)

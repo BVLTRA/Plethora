@@ -80,7 +80,8 @@ export default function Account() {
       id: entry.id,
       username: accountData.profile.username,
       title: entry.title,
-      excerpt: entry.content
+      excerpt: entry.content,
+      initialIsLiked: !!entry.is_liked_by_user
     })),
     liked: accountData.likes.map(like => ({
       id: like.id,
