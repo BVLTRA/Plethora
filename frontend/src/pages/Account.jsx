@@ -86,7 +86,8 @@ export default function Account() {
       id: like.id,
       username: 'unknown_node', // for now, since i don't have the username of the liked entry's author
       title: like.title,
-      excerpt: like.content
+      excerpt: like.content,
+      initialIsLiked: true
     })),
     commented: accountData.responses.map(res => ({
       id: res.id,
@@ -164,6 +165,7 @@ export default function Account() {
                 username={post.username}
                 title={post.title}
                 excerpt={post.excerpt} 
+                initialIsLiked={post.initialIsLiked}
               />
             ))
           ) : (

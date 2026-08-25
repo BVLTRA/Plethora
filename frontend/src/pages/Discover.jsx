@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import StoryCard from '../components/ui/StoryCard';
+import { useAuth } from '../context/AuthContext';
 import { WovenLightHero } from '../components/ui/woven-light-hero'; 
 import './Discover.css';
 
 export default function Discover() {
   // Memory for live database feed
+  const { user } = useAuth();
   const [feed, setFeed] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -12,7 +14,9 @@ export default function Discover() {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/discover');
+        const url = user ? `http://localhost:5000/api/discover?userId=${user.id}` : 'http://localhost:5000/api/discover';
+
+        const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
           setFeed(data);
@@ -27,7 +31,7 @@ export default function Discover() {
     };
 
     fetchFeed();
-  }, []);
+  }, [user]); // Re-run if the user logs in or out
 
   return (
     <main className="discover-page">
@@ -58,6 +62,7 @@ export default function Discover() {
                 username={post.username}
                 title={post.title}
                 excerpt={post.content} 
+                initialIsLiked={!!post.is_liked_by_user}
               />
             ))
           ) : (

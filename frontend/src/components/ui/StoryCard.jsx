@@ -4,9 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import "../../pages/Discover.css";
 import "./StoryCard.css";
 
-export default function StoryCard({ id, username, title, excerpt }) {
+export default function StoryCard({ id, username, title, excerpt, initialIsLiked }) {
   const { user } = useAuth(); // Identify who is clicking
-  const [isLiked, setIsLiked] = useState(false); // Short-term memory for button
+  const [isLiked, setIsLiked] = useState(initialIsLiked || false); // Short-term memory for button
 
   const handleLike = async () => {
     if (!user) {
