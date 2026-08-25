@@ -272,14 +272,33 @@ app.post('/api/likes', async (req, res) => {
     // CLOCK UPDATE
     await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
 
-    res.status(201).json({ message: 'Signal acknowledged.' });
+    res.status(201).json({ message: 'Entry acknowledged.' });
   } catch (error) {
     // Prevent crashes if they try to like something twice
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'Already acknowledged.' });
     }
     console.error("Like Error:", error);
-    res.status(500).json({ error: 'Failed to acknowledge signal.' });
+    res.status(500).json({ error: 'Failed to acknowledge entry.' });
+  }
+});
+
+// --- DISCOVER FEED ENDPOINT ---
+app.get('/api/discover', async (req, res) => {
+  try {
+    const [entries] = await db.query(
+      `SELECT e.id, e.title, e.content, e.created_at, u.username 
+       FROM entries e 
+       JOIN users u ON e.user_id = u.id 
+       WHERE e.status = 'published' 
+       ORDER BY e.created_at DESC 
+       LIMIT 100` // Cap feed to 100
+    );
+
+    res.status(200).json(entries);
+  } catch (error) {
+    console.error("Discover Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve entries.' });
   }
 });
 

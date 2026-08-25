@@ -1,42 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import StoryCard from '../components/ui/StoryCard';
+import { WovenLightHero } from '../components/ui/woven-light-hero'; 
 import './Discover.css';
-import { WovenLightHero } from '../components/ui/woven-light-hero';
-
-// Generated dummy data 
-const DUMMY_POSTS = [
-  {
-    id: 1,
-    username: 'signal_noise',
-    title: 'Muscle Memory',
-    excerpt: 'It’s been four months since the last text, but opening our chat is still pure muscle memory at this point. I’ll be sitting at my desk, tab over to my phone without even realizing I’m doing it.'
-  },
-  {
-    id: 2,
-    username: 'buffer_underrun',
-    title: 'Dopamine Deficit',
-    excerpt: 'I literally can’t watch a ten-minute video anymore without opening three other tabs or picking up my phone. My brain expects a fresh hit every four seconds.'
-  },
-  {
-    id: 3,
-    username: 'ghost_variable',
-    title: 'Corporate Scripts',
-    excerpt: 'If I have to hear "let\'s circle back" or "synergize" one more time today, I\'m going to lose my mind. It feels like everyone is performing a script instead of speaking like normal humans.'
-  },
-  {
-    id: 4,
-    username: 'null_pointer',
-    title: 'Static Friction',
-    excerpt: 'There is a very specific type of exhaustion that comes from doing absolutely nothing all day. It’s like a heavy, static friction that builds up in your chest until moving feels impossible.'
-  }
-];
 
 export default function Discover() {
+  // Memory for live database feed
+  const [feed, setFeed] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch feed from backend as soon as page loads
+  useEffect(() => {
+    const fetchFeed = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/discover');
+        if (response.ok) {
+          const data = await response.json();
+          setFeed(data);
+        } else {
+          console.error("Failed to sync with the grid.");
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeed();
+  }, []);
+
   return (
     <main className="discover-page">
       
       {/* Hero: Image and fade to black funk only */}
-      {/* Note: Try to remember what you ment by "funk" */}
+      {/* Note: Try to remember what you meant by "funk" */}
       <section className="discover-hero">
         <div className="hero-content">
           <div className="hero-text-block">
@@ -49,14 +46,24 @@ export default function Discover() {
       {/* "Void" section: Solid black section for the cards */}
       <section className="discover-feed">
         <div className="feed-grid">
-          {DUMMY_POSTS.map(post => (
-            <StoryCard 
-              key={post.id} 
-              username={post.username}
-              title={post.title}
-              excerpt={post.excerpt} 
-            />
-          ))}
+          {isLoading ? (
+            <div style={{ color: '#596f62', fontFamily: 'Courier New', gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 0' }}>
+              Receiving entiries...
+            </div>
+          ) : feed.length > 0 ? (
+            feed.map(post => (
+              <StoryCard 
+                key={post.id} 
+                username={post.username}
+                title={post.title}
+                excerpt={post.content} 
+              />
+            ))
+          ) : (
+            <div style={{ color: '#596f62', fontFamily: 'Courier New', gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 0' }}>
+              The diary is completely silent.
+            </div>
+          )}
         </div>
       </section>
 
