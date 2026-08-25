@@ -54,6 +54,7 @@ export default function Discover() {
             feed.map(post => (
               <StoryCard 
                 key={post.id} 
+                id={post.id}
                 username={post.username}
                 title={post.title}
                 excerpt={post.content} 

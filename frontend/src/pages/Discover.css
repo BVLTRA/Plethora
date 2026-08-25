@@ -128,6 +128,11 @@
   transition: color 0.2s ease, transform 0.1s ease;
 }
 
+/* Triggers when the 'liked' class is mathematically applied */
+.like-btn.liked {
+  color: #dc2626; /* Deep solid red */
+  transform: scale(1.1); /* Slight mechanical pop */
+}
 
 .icon-btn-disc {
   background: none;

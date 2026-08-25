@@ -160,6 +160,7 @@ export default function Account() {
             currentFeed.map(post => (
               <StoryCard 
                 key={post.id} 
+                id={post.id}
                 username={post.username}
                 title={post.title}
                 excerpt={post.excerpt} 

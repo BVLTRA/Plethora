@@ -1,9 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from 'react-router-dom'; 
+import { useAuth } from '../../context/AuthContext'; 
 import "../../pages/Discover.css";
 import "./StoryCard.css";
 
 export default function StoryCard({ id, username, title, excerpt }) {
+  const { user } = useAuth(); // Identify who is clicking
+  const [isLiked, setIsLiked] = useState(false); // Short-term memory for button
+
+  const handleLike = async () => {
+    if (!user) {
+      window.alert("You must be connected to acknowledge a signal.");
+      return;
+    }
+
+    // Instantly toggle visual state so it feels fast
+    setIsLiked(!isLiked);
+
+    try {
+      if (!isLiked) {
+        // Send the Like to the database
+        const response = await fetch('http://localhost:5000/api/likes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, entryId: id })
+        });
+        
+        // If the database rejects it, revert the heart back to gray
+        if (!response.ok) setIsLiked(false);
+      } else {
+        // Send the Un-Like to the database
+        const response = await fetch('http://localhost:5000/api/likes', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, entryId: id })
+        });
+        
+        if (!response.ok) setIsLiked(true);
+      }
+    } catch (error) {
+      console.error("Signal failure:", error);
+      setIsLiked(!isLiked); // Revert on network error
+    }
+  };
+
   return (
     <article className="story-card">
       <header className="card-header">
@@ -17,16 +57,22 @@ export default function StoryCard({ id, username, title, excerpt }) {
 
       <footer className="card-footer">
         <div className="card-actions">
-          <button className="icon-btn-disc like-btn" aria-label="Like">
+          {/* Like Button connected to state */}
+          <button 
+            className={`icon-btn-disc like-btn ${isLiked ? 'liked' : ''}`} 
+            onClick={handleLike}
+            aria-label="Like"
+          >
             <svg
               viewBox="0 0 24 24"
-              fill="none"
+              fill={isLiked ? "currentColor" : "none"} 
               stroke="currentColor"
               strokeWidth="2"
             >
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
           </button>
+          
           <button className="icon-btn-disc comment-btn" aria-label="Comment">
             <svg
               viewBox="0 0 24 24"
