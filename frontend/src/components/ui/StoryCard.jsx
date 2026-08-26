@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../../context/AuthContext'; 
 import "../../pages/Discover.css";
 import "./StoryCard.css";
@@ -7,6 +7,7 @@ import "./StoryCard.css";
 export default function StoryCard({ id, username, title, excerpt, initialIsLiked }) {
   const { user } = useAuth(); // Identify who is clicking
   const [isLiked, setIsLiked] = useState(initialIsLiked || false); // Short-term memory for button
+  const navigate = useNavigate();
 
   const handleLike = async () => {
     if (!user) {
@@ -78,7 +79,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
             </svg>
           </button>
           
-          <button className="icon-btn-disc comment-btn" aria-label="Comment">
+          <button className="icon-btn-disc comment-btn" onClick={() => navigate(`/reply/${id}`)} aria-label="Comment">
             <svg
               viewBox="0 0 24 24"
               fill="none"

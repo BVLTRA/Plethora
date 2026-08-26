@@ -1,28 +1,19 @@
-
-.like-btn {
-  background: none;
-  border: none;
-  color: #9ca3af; 
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: color 0.2s ease, transform 0.1s ease;
-}
-
 .reply-card {
-  background-color: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  background-color: rgba(12, 12, 12, 0.349); 
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  
+  border: 1px solid rgba(255, 255, 255, 0.178);
+  border-radius: 20px;
   padding: 1.25rem;
   cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .reply-card:hover {
-  border-color: rgba(126, 161, 107, 0.4); /* Faint Sage Green */
-  background-color: #111;
+  border-color: rgba(126, 161, 107, 0.4);
+  background-color: rgba(17, 17, 17, 0.8); 
 }
-
 .reply-header {
   display: flex;
   justify-content: space-between;
@@ -44,6 +35,8 @@
 }
 
 .reply-preview {
+  font-family: 'Poppins', sans-serif;
+  text-align: left;
   color: #9ca3af;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -57,10 +50,13 @@
 
 /* --- MODAL POPUP --- */
 .reply-modal {
-  background: #0a0a0a;
+  background: rgba(15, 15, 15, 0.562); 
+  /* backdrop-filter: blur(0px); 
+  -webkit-backdrop-filter: blur(0px); */
+  
   border: 1px solid #7ea16b9c;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 32px;
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
@@ -79,6 +75,7 @@
 }
 
 .reply-meta {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

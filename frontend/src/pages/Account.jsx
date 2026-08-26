@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
+import ResponseCard from '../components/ui/ResponseCard';
 import './Account.css';
 import './Auth.css';
 
@@ -121,7 +122,10 @@ export default function Account() {
       id: like.id, username: 'unknown_node', title: like.title, excerpt: like.content, initialIsLiked: true
     })),
     commented: accountData.responses.map(res => ({
-      id: res.id, username: accountData.profile.username, title: `Response to Entry #${res.entry_id}`, excerpt: res.content, initialIsLiked: false
+      id: res.id,
+      username: accountData.profile.username,
+      title: `Response to @${res.op_username}`, // Dynamic Title
+      excerpt: res.content
     }))
   };
 
@@ -278,7 +282,24 @@ export default function Account() {
         <div className="feed-grid">
           {currentFeed.length > 0 ? (
             currentFeed.map(post => (
-              <StoryCard key={post.id} id={post.id} username={post.username} title={post.title} excerpt={post.excerpt} initialIsLiked={post.initialIsLiked} />
+              activeTab === 'commented' ? (
+                <ResponseCard 
+                  key={post.id} 
+                  id={post.id} 
+                  username={post.username} 
+                  title={post.title} 
+                  excerpt={post.excerpt} 
+                />
+              ) : (
+                <StoryCard 
+                  key={post.id} 
+                  id={post.id}
+                  username={post.username}
+                  title={post.title}
+                  excerpt={post.excerpt} 
+                  initialIsLiked={post.initialIsLiked}
+                />
+              )
             ))
           ) : (
             <div className="empty-state"><p>No data found in this directory.</p></div>
