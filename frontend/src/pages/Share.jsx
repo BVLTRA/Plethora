@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; 
 import './Share.css';
+import './Auth.css'; 
 
 export default function Share() {
   const { user } = useAuth(); 
@@ -11,14 +12,6 @@ export default function Share() {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Security: Redirect disconnected users
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
-  // Unified transmission engine
   const submitEntry = async (status) => {
     if (!content.trim()) {
       window.alert("You cannot broadcast empty static.");
@@ -61,8 +54,49 @@ export default function Share() {
     }
   };
 
-  if (!user) return null; 
+  // --- GUEST BLOCK ---
+  // If no user is detected, render background and modal, but NOT the editor.
+  if (!user) {
+    return (
+      <main className="share-page">
+        <div className="modal-overlay">
+          <div className="auth-card" style={{ width: '100%', maxWidth: '450px', margin: '0 1rem', position: 'relative' }}>
+            
+            <header className="auth-header" style={{ marginBottom: '1.5rem' }}>
+              <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.25rem', color: '#fff', fontWeight: 400 }}>
+                Hello, stranger.
+              </h2>
+            </header>
 
+            <div className="auth-form">
+              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                We would love for you to share your story. However, to maintain the integrity of the diary and protect our community, we require all authors to be connected to a profile.
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <button 
+                  onClick={() => navigate('/login')} 
+                  className="btn-primary"
+                >
+                  Sign In
+                </button>
+                
+                <button 
+                  onClick={() => navigate(-1)} 
+                  className="guest-link"
+                >
+                  Nevermind, continue as a guest
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // --- THE AUTHENTICATED EDITOR ---
   return (
     <main className="share-page">
       <div className="share-container">
