@@ -89,11 +89,12 @@ export default function Profile() {
       excerpt: like.content,
       initialIsLiked: false 
     })),
-    commented: accountData.responses.map(res => ({
+    commented: profileData.responses.map(res => ({
       id: res.id,
-      username: accountData.profile.username,
-      title: `Response to @${res.op_username}`, // Dynamic Title
-      excerpt: res.content
+      username: profileData.profile.username,
+      title: `Response to @${res.op_username}`, 
+      excerpt: res.content,
+      initialIsLiked: false
     }))
   };
 

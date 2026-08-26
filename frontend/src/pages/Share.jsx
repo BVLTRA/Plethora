@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; 
+import AlertModal from '../components/ui/AlertModal';
 import './Share.css';
 import './Auth.css'; 
 
@@ -8,13 +9,18 @@ export default function Share() {
   const { user } = useAuth(); 
   const navigate = useNavigate();
 
+  const [modal, setModal] = useState({ isOpen: false, message: '', isConfirm: false, onConfirm: null });
+
+  const showAlert = (msg) => setModal({ isOpen: true, message: msg, isConfirm: false });
+  const showConfirm = (msg, action) => setModal({ isOpen: true, message: msg, isConfirm: true, onConfirm: action });
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitEntry = async (status) => {
     if (!content.trim()) {
-      window.alert("You cannot broadcast empty static.");
+      showAlert("You cannot upload an empty entry.");
       return;
     }
 
@@ -37,22 +43,22 @@ export default function Share() {
       if (response.ok) {
         navigate('/account');
       } else {
-        window.alert(`Transmission failed: ${data.error}`);
+        showAlert(`Transmission failed: ${data.error}`);
       }
     } catch (error) {
       console.error("Network error:", error);
-      window.alert("The grid is currently unresponsive.");
+      showAlert("The diary is currently unresponsive.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClear = () => {
-    if (window.confirm("Delete this draft? (fyi Talya said this is bad bad.. dont forget)")) {
-      setTitle('');
-      setContent('');
-    }
-  };
+  showConfirm("Delete this draft? (Once it's gone, it's gone.)", () => {
+    setTitle('');
+    setContent('');
+  });
+};
 
   // --- GUEST BLOCK ---
   // If no user is detected, render background and modal, but NOT the editor.
@@ -164,6 +170,13 @@ export default function Share() {
         </div>
 
       </div>
+      <AlertModal 
+  isOpen={modal.isOpen} 
+  message={modal.message} 
+  isConfirm={modal.isConfirm}
+  onConfirm={modal.onConfirm}
+  onClose={() => setModal({ ...modal, isOpen: false })} 
+/>
     </main>
   );
 }

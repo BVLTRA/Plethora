@@ -10,7 +10,7 @@ export default function Navbar() {
 
   console.log("[Navbar] Current user state is:", user);
 
-  if (location.pathname === '/login' || location.pathname === '/terms' || location.pathname === '/privacy') {
+  if (location.pathname === '/login' || location.pathname === '/terms' || location.pathname === '/privacy' || location.pathname === '/complete-account') {
     return null; 
   }
 

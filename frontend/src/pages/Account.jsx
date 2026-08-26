@@ -115,17 +115,34 @@ export default function Account() {
   if (isLoading || !accountData) return <div className="loading-state">Syncing with grid...</div>;
 
   const feeds = {
-    authored: accountData.entries.map(entry => ({
-      id: entry.id, username: accountData.profile.username, title: entry.title, excerpt: entry.content, initialIsLiked: !!entry.is_liked_by_user
-    })),
+    // Filter only published entries for the main tab
+    authored: accountData.entries
+      .filter(entry => entry.status === 'published')
+      .map(entry => ({
+        id: entry.id,
+        username: accountData.profile.username,
+        title: entry.title,
+        excerpt: entry.content,
+        initialIsLiked: !!entry.is_liked_by_user
+      })),
+    
+    // Filter only drafts into a dedicated array
+    drafts: accountData.entries
+      .filter(entry => entry.status === 'draft')
+      .map(entry => ({
+        id: entry.id,
+        username: accountData.profile.username,
+        title: entry.title || 'Untitled Draft',
+        excerpt: entry.content,
+        initialIsLiked: false
+      })),
+      
     liked: accountData.likes.map(like => ({
       id: like.id, username: 'unknown_node', title: like.title, excerpt: like.content, initialIsLiked: true
     })),
+    
     commented: accountData.responses.map(res => ({
-      id: res.id,
-      username: accountData.profile.username,
-      title: `Response to @${res.op_username}`, // Dynamic Title
-      excerpt: res.content
+      id: res.id, username: accountData.profile.username, title: `Response to @${res.op_username}`, excerpt: res.content, initialIsLiked: false
     }))
   };
 
@@ -275,6 +292,7 @@ export default function Account() {
           <button className={`tab-btn ${activeTab === 'authored' ? 'active' : ''}`} onClick={() => setActiveTab('authored')}>Entries</button>
           <button className={`tab-btn ${activeTab === 'liked' ? 'active' : ''}`} onClick={() => setActiveTab('liked')}>Acknowledged</button>
           <button className={`tab-btn ${activeTab === 'commented' ? 'active' : ''}`} onClick={() => setActiveTab('commented')}>Responded</button>
+          <button className={`tab-btn ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => setActiveTab('drafts')}>Drafts</button>
         </div>
       </nav>
 
