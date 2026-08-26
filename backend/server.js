@@ -147,14 +147,16 @@ app.post('/api/google-auth', async (req, res) => {
 
 // --- GOOGLE PART 2WOO: GOOGLE FINAL SIGNUP (IF CREATING) ---
 app.post('/api/google-signup', async (req, res) => {
-  const { email, username } = req.body;
+  const { email, username, password } = req.body;
 
   try {
     // Insert new user (Real name is intentionally discarded)
     const [insertResult] = await db.query(
-      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, NULL)',
-      [username, email]
+      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
+      [username, email, password]
     );
+
+    await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [insertResult.insertId]);
     
     res.status(201).json({
       message: 'Account created successfully.',
@@ -162,7 +164,7 @@ app.post('/api/google-signup', async (req, res) => {
     });
   } catch (error) {
     if (error.code === 'ER_DUP_ENTRY') {
-       return res.status(400).json({ error: 'Username already exists in the grid.' });
+       return res.status(400).json({ error: 'Username already exists.' });
     }
     res.status(500).json({ error: 'Internal server error.' });
   }
