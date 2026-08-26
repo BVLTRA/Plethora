@@ -12,6 +12,7 @@ export default function CompleteAccount() {
   const googleData = location.state?.googleData;
 
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
@@ -28,7 +29,8 @@ export default function CompleteAccount() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           email: googleData.email, 
-          username: username 
+          username: username,
+          password: password
         })
       });
 
@@ -56,7 +58,7 @@ export default function CompleteAccount() {
     }
   };
 
-  const isSubmitDisabled = !username || !isAgeVerified || !isTermsAccepted;
+  const isSubmitDisabled = !username || !password || !isAgeVerified || !isTermsAccepted;
 
   if (!googleData) return null;
 
@@ -83,7 +85,7 @@ export default function CompleteAccount() {
         <div className="auth-card">
           <header className="auth-header" style={{ marginBottom: '1.5rem' }}>
             <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.25rem', color: '#fff', fontWeight: 400 }}>
-              Finalize Node
+              Finalize Account
             </h2>
           </header>
 
@@ -100,6 +102,18 @@ export default function CompleteAccount() {
               />
             </div>
 
+            <div className="input-group">
+              <label htmlFor="password">Create Password</label>
+              <input 
+                type="password" 
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required 
+              />
+            </div>
+
             <div className="auth-agreements" style={{ marginTop: '1rem', marginBottom: '2rem' }}>
               <div className="checkbox-group">
                 <input 
@@ -108,7 +122,7 @@ export default function CompleteAccount() {
                   checked={isAgeVerified}
                   onChange={(e) => setIsAgeVerified(e.target.checked)}
                 />
-                <label htmlFor="age-verify">I confirm that I am 15 years of age or older.</label>
+                <label htmlFor="age-verify">I confirm that I am 13 years of age or older.</label>
               </div>
               
               <div className="checkbox-group">
