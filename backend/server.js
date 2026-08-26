@@ -224,6 +224,64 @@ app.get('/api/account/:id', async (req, res) => {
   }
 });
 
+// --- PUBLIC PROFILE ENDPOINT ---
+app.get('/api/profile/:username', async (req, res) => {
+  const targetUsername = req.params.username;
+  const visitorId = req.query.visitorId; // ID of person looking at profile
+
+  try {
+    // Find target user's node
+    const [targetUser] = await db.query(
+      'SELECT id, username, created_at, last_active FROM users WHERE username = ?', 
+      [targetUsername]
+    );
+
+    if (targetUser.length === 0) {
+      return res.status(404).json({ error: 'Node not found.' });
+    }
+
+    const targetUserId = targetUser[0].id;
+
+    // Fetch their entries, checking if VISITOR liked them
+    const [entries] = await db.query(
+      `SELECT e.id, e.title, e.content, e.created_at, 
+              IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+       FROM entries e 
+       LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+       WHERE e.user_id = ? AND e.status = "published" 
+       ORDER BY e.created_at DESC`, 
+      [visitorId, targetUserId]
+    );
+
+    // Fetch their published responses
+    const [responses] = await db.query(
+      'SELECT id, entry_id, content, created_at FROM comments WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
+      [targetUserId]
+    );
+
+    // Fetch entries they have acknowledged
+    const [likes] = await db.query(
+      `SELECT e.id, e.title, e.content, l.created_at AS liked_at 
+       FROM likes l 
+       JOIN entries e ON l.entry_id = e.id 
+       WHERE l.user_id = ? 
+       ORDER BY l.created_at DESC`, 
+      [targetUserId]
+    );
+
+    res.status(200).json({
+      profile: targetUser[0],
+      entries: entries,
+      responses: responses,
+      likes: likes
+    });
+
+  } catch (error) {
+    console.error("Profile Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve node data.' });
+  }
+});
+
 app.post('/api/entries', async (req, res) => {
   const { userId, title, content, status } = req.body; // status dictates 'draft' or 'published'
 

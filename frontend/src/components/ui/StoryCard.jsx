@@ -47,7 +47,12 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
   return (
     <article className="story-card">
       <header className="card-header">
-        <span className="card-username">@{username}</span>
+        <Link 
+          to={`/profile/${username}`} 
+          style={{ textDecoration: 'none' }} /* Prevents default blue underline */
+        >
+          <span className="card-username">@{username}</span>
+        </Link>
       </header>
 
       <div className="card-body">

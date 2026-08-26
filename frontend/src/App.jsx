@@ -10,6 +10,7 @@ import Account from './pages/Account';
 import ReadStory from './pages/ReadStory';
 import Auth from './pages/Auth';
 import CompleteAccount from './pages/CompleteAccount';
+import Profile from './pages/Profile';
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy';
 
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/complete-account" element={<CompleteAccount />} />
+        <Route path="/profile/:username" element={<Profile />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
 
