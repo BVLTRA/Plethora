@@ -285,10 +285,11 @@ app.get('/api/profile/:username', async (req, res) => {
   try {
     // Find target user's node
     const [targetUser] = await db.query(
-      'SELECT id, username, created_at, last_active FROM users WHERE username = ?', 
+      // ---> ADD 'quote' TO THIS LIST <---
+      'SELECT id, username, quote, created_at, last_active FROM users WHERE username = ?', 
       [targetUsername]
     );
-
+    
     if (targetUser.length === 0) {
       return res.status(404).json({ error: 'Node not found.' });
     }

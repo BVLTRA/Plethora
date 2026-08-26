@@ -118,6 +118,9 @@ export default function Profile() {
               </span>
             </div>
           </div>
+          {profileData.profile.quote && (
+            <p className="profile-bio">"{profileData.profile.quote}"</p>
+          )}
         </div>
       </header>
 
