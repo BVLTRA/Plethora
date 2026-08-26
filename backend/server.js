@@ -155,25 +155,14 @@ app.get('/api/account/:id', async (req, res) => {
 
     // Fetch published entries
     const [entries] = await db.query(
-<<<<<<< Updated upstream
-    `SELECT e.id, e.title, e.content, e.status, e.created_at, 
-            IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
-     FROM entries e 
-     LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
-     WHERE e.user_id = ? 
-     ORDER BY e.created_at DESC`, 
-    [req.params.id, req.params.id]
-  );
-=======
-      `SELECT e.id, e.title, e.content, e.created_at, 
+      `SELECT e.id, e.title, e.content, e.status, e.created_at,
               IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
-       FROM entries e 
+       FROM entries e
        LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
-       WHERE e.user_id = ? AND e.status = "published" 
+       WHERE e.user_id = ? AND e.status = 'published'
        ORDER BY e.created_at DESC`,
       [userId, userId]
     );
->>>>>>> Stashed changes
 
     // Fetch published responses (comments)
     const [responses] = await db.query(
