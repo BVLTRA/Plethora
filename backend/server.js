@@ -2,10 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 
 // Create the MySQL Connection Pool
 const pool = mysql.createPool({
@@ -35,32 +36,18 @@ app.get('/api/status', async (req, res) => {
 
 // --- USER SIGNUP ENDPOINT ---
 app.post('/api/signup', async (req, res) => {
-  // Collect react data
   const { username, email, password } = req.body;
-
   try {
-    // Write to database. 
-    // Question marks are a security feature to prevent SQL Injection attacks. (research more about this)
-    // HEYYYY POOKIEEEE: Dont forget to hash password using library [ pref 'bcrypt'] before publishing!
+    // Hash password with 10 salt rounds
+    const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await db.query(
       'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email, password]
+      [username, email, hashedPassword]
     );
 
-    // Send success signal back to React
-    res.status(201).json({ 
-      message: 'User created successfully.', 
-      userId: result.insertId 
-    });
-
+    res.status(201).json({ message: 'Node created successfully.', userId: result.insertId });
   } catch (error) {
-    console.error("Database Error:", error);
-    
-    // Handle duplicates
-    if (error.code === 'ER_DUP_ENTRY') {
-       return res.status(400).json({ error: 'Username or email already exists in the grid.' });
-    }
-    
+    if (error.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Username or email already exists in the grid.' });
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
@@ -68,37 +55,23 @@ app.post('/api/signup', async (req, res) => {
 // --- USER LOGIN ENDPOINT ---
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    // Find email
     const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-
-    // If email does not exist
-    if (rows.length === 0) {
-      return res.status(401).json({ error: 'Node not found. Check your email.' });
-    }
+    if (rows.length === 0) return res.status(401).json({ error: 'Node not found. Check your email.' });
 
     const user = rows[0];
-
-    // NOTE: For now, I'm storing them raw... dont forget to hash.
-    if (user.password_hash !== password) {
-      return res.status(401).json({ error: 'Invalid credentials. Access denied.' });
-    }
+    
+    // Compare the typed password against the stored hash
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials. Access denied.' });
 
     await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
 
-    // Success: Return userdata to frontend
     res.status(200).json({
       message: 'Session initialized.',
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
+      user: { id: user.id, username: user.username, email: user.email }
     });
-
   } catch (error) {
-    console.error("Login Error:", error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
@@ -112,7 +85,7 @@ app.post('/api/google-auth', async (req, res) => {
     const googleResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-    
+
     if (!googleResponse.ok) return res.status(401).json({ error: 'Invalid Google token.' });
 
     const profile = await googleResponse.json();
@@ -148,24 +121,19 @@ app.post('/api/google-auth', async (req, res) => {
 // --- GOOGLE PART 2WOO: GOOGLE FINAL SIGNUP (IF CREATING) ---
 app.post('/api/google-signup', async (req, res) => {
   const { email, username, password } = req.body;
-
   try {
-    // Insert new user (Real name is intentionally discarded)
+    const hashedPassword = await bcrypt.hash(password, 10);
     const [insertResult] = await db.query(
       'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email, password]
+      [username, email, hashedPassword]
     );
 
     await db.query('UPDATE users SET last_active = CURRENT_TIMESTAMP WHERE id = ?', [insertResult.insertId]);
-    
-    res.status(201).json({
-      message: 'Account created successfully.',
-      user: { id: insertResult.insertId, username, email }
-    });
+
+    res.status(201).json({ message: 'Node created.', user: { id: insertResult.insertId, username, email } });
   } catch (error) {
-    if (error.code === 'ER_DUP_ENTRY') {
-       return res.status(400).json({ error: 'Username already exists.' });
-    }
+    if (error.code === 'ER_DUP_ENTRY')
+      return res.status(400).json({ error: 'Username already exists.' });
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
@@ -177,8 +145,8 @@ app.get('/api/account/:id', async (req, res) => {
   try {
     // Fetch user profile (leave the password)
     const [user] = await db.query(
-    'SELECT username, email, quote, created_at, last_active FROM users WHERE id = ?', 
-    [userId]
+      'SELECT username, email, quote, created_at, last_active FROM users WHERE id = ?',
+      [userId]
     );
 
     if (user.length === 0) {
@@ -187,13 +155,13 @@ app.get('/api/account/:id', async (req, res) => {
 
     // Fetch published entries
     const [entries] = await db.query(
-      `SELECT e.id, e.title, e.content, e.created_at, 
+      `SELECT e.id, e.title, e.content, e.status, e.created_at,
               IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
-       FROM entries e 
+       FROM entries e
        LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
-       WHERE e.user_id = ? AND e.status = "published" 
-       ORDER BY e.created_at DESC`, 
-      [userId, userId] 
+       WHERE e.user_id = ? AND e.status = 'published'
+       ORDER BY e.created_at DESC`,
+      [userId, userId]
     );
 
     // Fetch published responses (comments)
@@ -203,8 +171,8 @@ app.get('/api/account/:id', async (req, res) => {
        JOIN entries e ON c.entry_id = e.id
        JOIN users u ON e.user_id = u.id
        WHERE c.user_id = ? AND c.status = "published" 
-       ORDER BY c.created_at DESC`, 
-      [userId] 
+       ORDER BY c.created_at DESC`,
+      [userId]
     );
 
     // Fetch entries they have liked by joining the likes table with the entries table
@@ -213,7 +181,7 @@ app.get('/api/account/:id', async (req, res) => {
        FROM likes l 
        JOIN entries e ON l.entry_id = e.id 
        WHERE l.user_id = ? 
-       ORDER BY l.created_at DESC`, 
+       ORDER BY l.created_at DESC`,
       [userId]
     );
 
@@ -238,13 +206,13 @@ app.put('/api/users/:id', async (req, res) => {
 
   try {
     if (password) {
-      // If they typed a new password, update everything
+      const hashedPassword = await bcrypt.hash(password, 10);
       await db.query(
         'UPDATE users SET username = ?, email = ?, quote = ?, password_hash = ? WHERE id = ?', 
-        [username, email, quote, password, userId]
+        [username, email, quote, hashedPassword, userId]
       );
-    } else {
-      // If password field is blank, leave their old password alone
+    }
+    else {
       await db.query(
         'UPDATE users SET username = ?, email = ?, quote = ? WHERE id = ?', 
         [username, email, quote, userId]
@@ -252,7 +220,6 @@ app.put('/api/users/:id', async (req, res) => {
     }
     res.status(200).json({ message: 'Node updated.' });
   } catch (error) {
-    if (error.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Username or email already taken.' });
     res.status(500).json({ error: 'Failed to update node.' });
   }
 });
@@ -266,7 +233,7 @@ app.delete('/api/users/:id', async (req, res) => {
     if (keepEntries) {
       // GHOST NODE: Scramble the username with their ID to bypass UNIQUE constraints
       await db.query(
-        `UPDATE users SET username = CONCAT('Unknown_', id), email = NULL, password_hash = NULL WHERE id = ?`, 
+        `UPDATE users SET username = CONCAT('Unknown_', id), email = NULL, password_hash = NULL WHERE id = ?`,
         [userId]
       );
     } else {
@@ -293,10 +260,10 @@ app.get('/api/profile/:username', async (req, res) => {
     // Find target user's node
     const [targetUser] = await db.query(
       // ---> ADD 'quote' TO THIS LIST <---
-      'SELECT id, username, quote, created_at, last_active FROM users WHERE username = ?', 
+      'SELECT id, username, quote, created_at, last_active FROM users WHERE username = ?',
       [targetUsername]
     );
-    
+
     if (targetUser.length === 0) {
       return res.status(404).json({ error: 'Node not found.' });
     }
@@ -310,7 +277,7 @@ app.get('/api/profile/:username', async (req, res) => {
        FROM entries e 
        LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
        WHERE e.user_id = ? AND e.status = "published" 
-       ORDER BY e.created_at DESC`, 
+       ORDER BY e.created_at DESC`,
       [visitorId, targetUserId]
     );
 
@@ -321,8 +288,8 @@ app.get('/api/profile/:username', async (req, res) => {
        JOIN entries e ON c.entry_id = e.id
        JOIN users u ON e.user_id = u.id
        WHERE c.user_id = ? AND c.status = "published" 
-       ORDER BY c.created_at DESC`, 
-      [targetUserId] 
+       ORDER BY c.created_at DESC`,
+      [targetUserId]
     );
 
     // Fetch entries they have acknowledged
@@ -331,7 +298,7 @@ app.get('/api/profile/:username', async (req, res) => {
        FROM likes l 
        JOIN entries e ON l.entry_id = e.id 
        WHERE l.user_id = ? 
-       ORDER BY l.created_at DESC`, 
+       ORDER BY l.created_at DESC`,
       [targetUserId]
     );
 
@@ -411,7 +378,7 @@ app.get('/api/comments/:id', async (req, res) => {
     );
 
     if (data.length === 0) return res.status(404).json({ error: 'Signal lost.' });
-    
+
     res.status(200).json(data[0]);
   } catch (error) {
     console.error("Comment Stack Error:", error);
@@ -499,7 +466,7 @@ app.get('/api/discover', async (req, res) => {
 // --- READ SINGLE STORY ENDPOINT ---
 app.get('/api/entries/:id', async (req, res) => {
   const entryId = req.params.id;
-  const visitorId = req.query.visitorId; 
+  const visitorId = req.query.visitorId;
 
   try {
     // 1. Grab the original signal and interaction math

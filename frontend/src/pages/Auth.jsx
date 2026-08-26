@@ -5,11 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 import Logo from '../assets/logo.png';
 import { WovenLightHero } from '../components/ui/woven-light-hero';
+import AlertModal from '../components/ui/AlertModal';
 
 export default function Auth() {
   const { login } = useAuth();
-  
   const [isLogin, setIsLogin] = useState(true);
+
+  const [modal, setModal] = useState({ isOpen: false, message: '' });
+  const showAlert = (msg) => setModal({ isOpen: true, message: msg });
   
   // Form State
   const [username, setUsername] = useState('');
@@ -45,10 +48,10 @@ export default function Auth() {
         const data = await response.json();
 
 
-        // 3. Check HTTP status code
+        // Check HTTP status code
         if (response.ok) {
           // Success! Clear form and switch UI toLogin screen
-          window.alert("Account created. You may now log in.");
+          showAlert("Account created. You may now log in.");
           setUsername('');
           setEmail('');
           setPassword('');
@@ -57,12 +60,12 @@ export default function Auth() {
           setIsLogin(true); 
         } else {
           // Backend rejected request (duplicate email or username)
-          window.alert(`Transmission failed: ${data.error}`);
+          showAlert(`Transmission failed: ${data.error}`);
         }
 
       } catch (error) {
         console.error("Network error:", error);
-        window.alert("Could not connect to the backend server.");
+        showAlert("Could not connect to the backend server.");
       }
 
     } else {
@@ -89,19 +92,19 @@ export default function Auth() {
         // Process backend response
         if (response.ok) {
 
-          window.alert(`Welcome back, ${data.user.username}`);
+          showAlert(`Welcome back, ${data.user.username}`);
           
           login(data.user);
           navigate('/discover'); 
           
         } else {
           // Backend rejected login (wrong password or email)
-          window.alert(`Authentication failed: ${data.error}`);
+          showAlert(`Authentication failed: ${data.error}`);
         }
 
       } catch (error) {
         console.error("Network error:", error);
-        window.alert("Could not connect to the backend server.");
+        showAlert("Could not connect to the backend server.");
       }
     }
   };
@@ -127,12 +130,13 @@ export default function Auth() {
             // Normal login
             login(data.user); 
             console.log("[Auth] Google Auth successful! User data:", data.user);
-            window.alert(`Welcome back, ${data.user.username}`);
+            showAlert(`Welcome back, ${data.user.username}`);
             navigate('/discover');
           }
         }
       } catch (error) {
         console.error("Network error:", error);
+        showAlert("Could not connect to the backend server.");
       }
     },
     onError: () => {
@@ -287,6 +291,12 @@ export default function Auth() {
         </div>
 
       </div>
+
+      <AlertModal 
+  isOpen={modal.isOpen} 
+  message={modal.message} 
+  onClose={() => setModal({ ...modal, isOpen: false })} 
+/>
 
     </main>
   );
