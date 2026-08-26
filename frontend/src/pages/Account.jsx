@@ -3,39 +3,37 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import './Account.css';
+import './Auth.css';
 
-// Time Algorithm
 const calculateTimeAgo = (timestamp) => {
   if (!timestamp) return 'Status unknown';
-
   const now = new Date();
   const past = new Date(timestamp);
   const diffInSeconds = Math.floor((now - past) / 1000);
 
   if (diffInSeconds < 60) return 'Active right now';
-  
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
-  
   const diffInHours = Math.floor(diffInMinutes / 60);
   if (diffInHours < 24) return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
-  
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 7) return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
-
-  // If it's been more than a week, just show the date
   return past.toLocaleDateString();
 };
 
 export default function Account() {
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('authored');
   const [accountData, setAccountData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Security: Send unauthenticated traffic back to login
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteStage, setDeleteStage] = useState(0); // 0 = default, 1 = asking about entries
+  const [editForm, setEditForm] = useState({ username: '', email: '', quote: '', password: '' });
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -48,8 +46,13 @@ export default function Account() {
         if (response.ok) {
           const data = await response.json();
           setAccountData(data);
-        } else {
-          console.error("Failed to fetch account data");
+          // Pre-fill the edit form with existing data
+          setEditForm({
+            username: data.profile.username,
+            email: data.profile.email || '',
+            quote: data.profile.quote || '',
+            password: ''
+          });
         }
       } catch (error) {
         console.error("Network error:", error);
@@ -62,39 +65,63 @@ export default function Account() {
   }, [user, navigate]);
 
   const handleSignOut = () => {
-    logout(); // Sever the Context and wipe local storage
-    navigate('/'); // Route back to the main grid
+    logout();
+    navigate('/'); 
   };
 
-  if (isLoading || !accountData) {
-    return (
-      <main className="account-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ color: '#596f62', fontFamily: 'Courier New' }}>Syncing with grid...</div>
-      </main>
-    );
-  }
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      });
+      
+      if (response.ok) {
+        // Update the global Context so the Navbar changes
+        login({ ...user, username: editForm.username, email: editForm.email });
+        window.alert("Node updated.");
+        setIsModalOpen(false);
+        window.location.reload(); // refresh to pull the new SQL data
+      } else {
+        const data = await response.json();
+        window.alert(data.error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  // Format the raw SQL arrays to match StoryCard props
+  const executeDeletion = async (keepEntries) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keepEntries })
+      });
+
+      if (response.ok) {
+        logout();
+        window.alert(keepEntries ? "You are now a ghost. Node disconnected." : "All data erased. Node destroyed.");
+        navigate('/');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (isLoading || !accountData) return <div className="loading-state">Syncing with grid...</div>;
+
   const feeds = {
     authored: accountData.entries.map(entry => ({
-      id: entry.id,
-      username: accountData.profile.username,
-      title: entry.title,
-      excerpt: entry.content,
-      initialIsLiked: !!entry.is_liked_by_user
+      id: entry.id, username: accountData.profile.username, title: entry.title, excerpt: entry.content, initialIsLiked: !!entry.is_liked_by_user
     })),
     liked: accountData.likes.map(like => ({
-      id: like.id,
-      username: 'unknown_node', // for now, since i don't have the username of the liked entry's author
-      title: like.title,
-      excerpt: like.content,
-      initialIsLiked: true
+      id: like.id, username: 'unknown_node', title: like.title, excerpt: like.content, initialIsLiked: true
     })),
     commented: accountData.responses.map(res => ({
-      id: res.id,
-      username: accountData.profile.username,
-      title: `Response to Entry #${res.entry_id}`,
-      excerpt: res.content
+      id: res.id, username: accountData.profile.username, title: `Response to Entry #${res.entry_id}`, excerpt: res.content, initialIsLiked: false
     }))
   };
 
@@ -103,80 +130,161 @@ export default function Account() {
   return (
     <main className="account-page">
       
-      {/* Profile Header Readout */}
+      {/* --- SETTINGS MODAL --- */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="auth-card" style={{ width: '100%', maxWidth: '450px', margin: '0 1rem', position: 'relative' }}>
+            
+            {deleteStage === 0 ? (
+              <>
+                <header className="auth-header" style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.25rem', color: '#fff', fontWeight: 400 }}>
+                    Account Settings
+                  </h2>
+                </header>
+
+                <form onSubmit={handleUpdateProfile} className="auth-form">
+                  <div className="input-group">
+                    <label>Username</label>
+                    <input 
+                      type="text" 
+                      value={editForm.username} 
+                      onChange={e => setEditForm({...editForm, username: e.target.value})} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="input-group">
+                    <label>Email</label>
+                    <input 
+                      type="email" 
+                      value={editForm.email} 
+                      onChange={e => setEditForm({...editForm, email: e.target.value})} 
+                    />
+                  </div>
+                  
+                  <div className="input-group">
+                    <label>Quote</label>
+                    <input 
+                      type="text" 
+                      value={editForm.quote} 
+                      onChange={e => setEditForm({...editForm, quote: e.target.value})} 
+                      maxLength={250} 
+                    />
+                  </div>
+                  
+                  <div className="input-group">
+                    <label>New Password</label>
+                    <input 
+                      type="password" 
+                      value={editForm.password} 
+                      onChange={e => setEditForm({...editForm, password: e.target.value})} 
+                      placeholder="Leave blank to keep current" 
+                    />
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+                    <button type="submit" className="btn-primary">
+                      Save Changes
+                    </button>
+                    <button type="button" className="guest-link" onClick={() => setIsModalOpen(false)}>
+                      Nevermind, Cancel
+                    </button>
+                  </div>
+                </form>
+                
+                <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', textAlign: 'center' }}>
+                  <button 
+                    onClick={() => setDeleteStage(1)} 
+                    className="guest-link" 
+                    style={{ color: '#dc2626' }}
+                  >
+                    Initiate Disconnect (Delete Profile)
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="delete-confirmation">
+                <header className="auth-header" style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '1.25rem', color: '#dc2626', fontWeight: 400 }}>
+                    Warning: Permanent Disconnect
+                  </h2>
+                </header>
+                
+                <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                  Do you want to erase your entries from the grid, or leave them behind as an anonymous ghost?
+                </p>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <button 
+                    onClick={() => executeDeletion(true)} 
+                    className="btn-primary" 
+                    style={{ background: 'transparent', border: '1px solid #9ca3af', color: '#9ca3af' }}
+                  >
+                    Leave entries (Become a Ghost)
+                  </button>
+                  
+                  <button 
+                    onClick={() => executeDeletion(false)} 
+                    className="btn-primary" 
+                    style={{ background: '#dc2626', borderColor: '#dc2626', color: '#fff' }}
+                  >
+                    Erase everything
+                  </button>
+                  
+                  <button 
+                    onClick={() => setDeleteStage(0)} 
+                    className="guest-link" 
+                    style={{ marginTop: '1rem' }}
+                  >
+                    Abort Disconnect
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
       <header className="profile-header">
         <div className="profile-container">
           <div className="profile-readout">
             <h1 className="profile-username">@{accountData.profile.username}</h1>
             <div className="profile-status">
-              {/* If they are active right now, the indicator glows green. Otherwise, it dims to gray */}
-              <span 
-                className="status-indicator" 
-                style={{ 
-                  backgroundColor: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '#749666' : '#749666',
-                  boxShadow: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '0 0 8px rgba(145, 204, 114, 0.5)' : 'none'
-                }}
-              ></span>
-              <span className="status-text">
-                {calculateTimeAgo(accountData.profile.last_active)}
-              </span>
+              <span className="status-indicator" style={{ backgroundColor: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '#91cc72' : '#596f62', boxShadow: calculateTimeAgo(accountData.profile.last_active) === 'Active right now' ? '0 0 8px rgba(145, 204, 114, 0.5)' : 'none' }}></span>
+              <span className="status-text">{calculateTimeAgo(accountData.profile.last_active)}</span>
             </div>
           </div>
           
-          <p className="profile-bio">"Just trying to keep the buffer from overflowing. 99% static, 1% signal."</p>
+          <p className="profile-bio">"{accountData.profile.quote}"</p>
 
-          <button onClick={handleSignOut} className="btn-disconnect">
-            Disconnect Account
-          </button>
+          <div className="profile-buttons">
+            <button onClick={() => setIsModalOpen(true)} className="btn-action">Edit Profile</button>
+            <button onClick={handleSignOut} className="btn-action">Disconnect</button>
+          </div>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
       <nav className="profile-tabs-wrapper">
         <div className="profile-tabs">
-          <button 
-            className={`tab-btn ${activeTab === 'authored' ? 'active' : ''}`}
-            onClick={() => setActiveTab('authored')}
-          >
-            Entries
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'liked' ? 'active' : ''}`}
-            onClick={() => setActiveTab('liked')}
-          >
-            Acknowledged
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'commented' ? 'active' : ''}`}
-            onClick={() => setActiveTab('commented')}
-          >
-            Responded
-          </button>
+          <button className={`tab-btn ${activeTab === 'authored' ? 'active' : ''}`} onClick={() => setActiveTab('authored')}>Entries</button>
+          <button className={`tab-btn ${activeTab === 'liked' ? 'active' : ''}`} onClick={() => setActiveTab('liked')}>Acknowledged</button>
+          <button className={`tab-btn ${activeTab === 'commented' ? 'active' : ''}`} onClick={() => setActiveTab('commented')}>Responded</button>
         </div>
       </nav>
 
-      {/* Grid Feed */}
       <section className="account-feed">
         <div className="feed-grid">
           {currentFeed.length > 0 ? (
             currentFeed.map(post => (
-              <StoryCard 
-                key={post.id} 
-                id={post.id}
-                username={post.username}
-                title={post.title}
-                excerpt={post.excerpt} 
-                initialIsLiked={post.initialIsLiked}
-              />
+              <StoryCard key={post.id} id={post.id} username={post.username} title={post.title} excerpt={post.excerpt} initialIsLiked={post.initialIsLiked} />
             ))
           ) : (
-            <div className="empty-state">
-              <p>No data found in this directory.</p>
-            </div>
+            <div className="empty-state"><p>No data found in this directory.</p></div>
           )}
         </div>
       </section>
-
     </main>
   );
 }

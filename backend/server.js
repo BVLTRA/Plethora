@@ -175,9 +175,9 @@ app.get('/api/account/:id', async (req, res) => {
   try {
     // Fetch user profile (leave the password)
     const [user] = await db.query(
-    'SELECT username, created_at, last_active FROM users WHERE id = ?', 
+    'SELECT username, email, quote, created_at, last_active FROM users WHERE id = ?', 
     [userId]
-     );
+    );
 
     if (user.length === 0) {
       return res.status(404).json({ error: 'Node not found.' });
@@ -221,6 +221,59 @@ app.get('/api/account/:id', async (req, res) => {
   } catch (error) {
     console.error("Aggregation Error:", error);
     res.status(500).json({ error: 'Failed to retrieve node data.' });
+  }
+});
+
+// --- UPDATE PROFILE ENDPOINT ---
+app.put('/api/users/:id', async (req, res) => {
+  const userId = req.params.id;
+  const { username, email, quote, password } = req.body;
+
+  try {
+    if (password) {
+      // If they typed a new password, update everything
+      await db.query(
+        'UPDATE users SET username = ?, email = ?, quote = ?, password_hash = ? WHERE id = ?', 
+        [username, email, quote, password, userId]
+      );
+    } else {
+      // If password field is blank, leave their old password alone
+      await db.query(
+        'UPDATE users SET username = ?, email = ?, quote = ? WHERE id = ?', 
+        [username, email, quote, userId]
+      );
+    }
+    res.status(200).json({ message: 'Node updated.' });
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Username or email already taken.' });
+    res.status(500).json({ error: 'Failed to update node.' });
+  }
+});
+
+// --- DELETE/GHOST NODE ENDPOINT ---
+app.delete('/api/users/:id', async (req, res) => {
+  const userId = req.params.id;
+  const { keepEntries } = req.body;
+
+  try {
+    if (keepEntries) {
+      // GHOST NODE: Scramble the username with their ID to bypass UNIQUE constraints
+      await db.query(
+        `UPDATE users SET username = CONCAT('Unknown_', id), email = NULL, password_hash = NULL WHERE id = ?`, 
+        [userId]
+      );
+    } else {
+      // HARD DELETE: Erase their account. 
+      // (deleting child records first to avoid SQL constraint errors)
+      await db.query('DELETE FROM likes WHERE user_id = ?', [userId]);
+      await db.query('DELETE FROM comments WHERE user_id = ?', [userId]);
+      await db.query('DELETE FROM entries WHERE user_id = ?', [userId]);
+      await db.query('DELETE FROM users WHERE id = ?', [userId]);
+    }
+    res.status(200).json({ message: 'Connection severed permanently.' });
+  } catch (error) {
+    console.error("Deletion Error:", error);
+    res.status(500).json({ error: 'Failed to delete node.' });
   }
 });
 
