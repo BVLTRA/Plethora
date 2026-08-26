@@ -455,6 +455,36 @@ app.get('/api/discover', async (req, res) => {
   }
 });
 
+// --- READ SINGLE STORY ENDPOINT ---
+app.get('/api/entries/:id', async (req, res) => {
+  const entryId = req.params.id;
+  const visitorId = req.query.visitorId; 
+
+  try {
+    const [entries] = await db.query(
+      `SELECT 
+        e.id, e.title, e.content, e.created_at, u.username,
+        (SELECT COUNT(*) FROM likes WHERE entry_id = e.id) AS likes_count,
+        (SELECT COUNT(*) FROM comments WHERE entry_id = e.id AND status = 'published') AS comments_count,
+        IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+       FROM entries e
+       JOIN users u ON e.user_id = u.id
+       LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+       WHERE e.id = ? AND e.status = 'published'`,
+      [visitorId || null, entryId]
+    );
+
+    if (entries.length === 0) {
+      return res.status(404).json({ error: 'Signal not found or lost to the void.' });
+    }
+
+    res.status(200).json(entries[0]);
+  } catch (error) {
+    console.error("Read Story Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve the signal.' });
+  }
+});
+
 // Start up server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
