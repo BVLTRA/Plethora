@@ -41,7 +41,7 @@ export default function ReplyCard({ username, opUsername, content, timestamp }) 
             </div>
             
             <button className="btn-outline close-reply-btn" onClick={() => setIsOpen(false)}>
-              Close Connection
+              Close Response
             </button>
             
           </div>

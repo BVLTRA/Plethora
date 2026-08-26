@@ -1,0 +1,102 @@
+.reply-card {
+  background-color: rgba(12, 12, 12, 0.349); 
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  
+  border: 1px solid rgba(255, 255, 255, 0.178);
+  border-radius: 20px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.reply-card:hover {
+  border-color: rgba(126, 161, 107, 0.4);
+  background-color: rgba(17, 17, 17, 0.8); 
+}
+.reply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.reply-username {
+  color: #7ea16b;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.reply-date {
+  color: #596f62;
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.reply-preview {
+  font-family: 'Poppins', sans-serif;
+  text-align: left;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  /* Truncates text to 3 lines with an ellipsis */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- MODAL POPUP --- */
+.reply-modal {
+  background: rgba(15, 15, 15, 0.562); 
+  /* backdrop-filter: blur(0px); 
+  -webkit-backdrop-filter: blur(0px); */
+  
+  border: 1px solid #7ea16b9c;
+  padding: 2rem;
+  border-radius: 32px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+
+.reply-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.reply-meta {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reply-context {
+  font-size: 0.8rem;
+  color: #596f62;
+  font-style: italic;
+}
+
+.reply-modal-body p {
+  line-height: 1.7;
+  color: #d1d5db;
+  white-space: pre-wrap;
+  font-size: 1.05rem;
+  font-weight: 300;
+  margin: 0;
+}
+
+.close-reply-btn {
+  margin-top: 2rem;
+  width: 100%;
+}

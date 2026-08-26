@@ -198,8 +198,13 @@ app.get('/api/account/:id', async (req, res) => {
 
     // Fetch published responses (comments)
     const [responses] = await db.query(
-      'SELECT id, entry_id, content, created_at FROM comments WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
-      [userId]
+      `SELECT c.id, c.entry_id, c.content, c.created_at, u.username AS op_username 
+       FROM comments c
+       JOIN entries e ON c.entry_id = e.id
+       JOIN users u ON e.user_id = u.id
+       WHERE c.user_id = ? AND c.status = "published" 
+       ORDER BY c.created_at DESC`, 
+      [userId] 
     );
 
     // Fetch entries they have liked by joining the likes table with the entries table
@@ -311,8 +316,13 @@ app.get('/api/profile/:username', async (req, res) => {
 
     // Fetch their published responses
     const [responses] = await db.query(
-      'SELECT id, entry_id, content, created_at FROM comments WHERE user_id = ? AND status = "published" ORDER BY created_at DESC', 
-      [targetUserId]
+      `SELECT c.id, c.entry_id, c.content, c.created_at, u.username AS op_username 
+       FROM comments c
+       JOIN entries e ON c.entry_id = e.id
+       JOIN users u ON e.user_id = u.id
+       WHERE c.user_id = ? AND c.status = "published" 
+       ORDER BY c.created_at DESC`, 
+      [targetUserId] 
     );
 
     // Fetch entries they have acknowledged
@@ -375,6 +385,37 @@ app.post('/api/comments', async (req, res) => {
   } catch (error) {
     console.error("Comment Error:", error);
     res.status(500).json({ error: 'Failed to broadcast response.' });
+  }
+});
+
+// --- READ SINGLE COMMENT ---
+app.get('/api/comments/:id', async (req, res) => {
+  const commentId = req.params.id;
+  const visitorId = req.query.visitorId;
+
+  try {
+    const [data] = await db.query(
+      `SELECT 
+        c.id AS comment_id, c.content AS comment_content, c.created_at AS comment_created_at, cu.username AS comment_username,
+        e.id AS entry_id, e.title, e.content AS entry_content, e.created_at AS entry_created_at, eu.username AS op_username,
+        (SELECT COUNT(*) FROM likes WHERE entry_id = e.id) AS likes_count,
+        (SELECT COUNT(*) FROM comments WHERE entry_id = e.id AND status = 'published') AS comments_count,
+        IF(l.user_id IS NOT NULL, true, false) AS is_liked_by_user
+       FROM comments c
+       JOIN users cu ON c.user_id = cu.id
+       JOIN entries e ON c.entry_id = e.id
+       JOIN users eu ON e.user_id = eu.id
+       LEFT JOIN likes l ON e.id = l.entry_id AND l.user_id = ?
+       WHERE c.id = ? AND c.status = 'published'`,
+      [visitorId || null, commentId]
+    );
+
+    if (data.length === 0) return res.status(404).json({ error: 'Signal lost.' });
+    
+    res.status(200).json(data[0]);
+  } catch (error) {
+    console.error("Comment Stack Error:", error);
+    res.status(500).json({ error: 'Failed to retrieve the stack.' });
   }
 });
 
@@ -461,6 +502,7 @@ app.get('/api/entries/:id', async (req, res) => {
   const visitorId = req.query.visitorId; 
 
   try {
+    // 1. Grab the original signal and interaction math
     const [entries] = await db.query(
       `SELECT 
         e.id, e.title, e.content, e.created_at, u.username,
@@ -478,17 +520,17 @@ app.get('/api/entries/:id', async (req, res) => {
       return res.status(404).json({ error: 'Signal not found or lost to the void.' });
     }
 
-    // Grab all the responses attached to this signal
+    // 2. Grab all the responses attached to this signal
     const [comments] = await db.query(
       `SELECT c.id, c.content, c.created_at, u.username
        FROM comments c
        JOIN users u ON c.user_id = u.id
        WHERE c.entry_id = ? AND c.status = 'published'
-       ORDER BY c.created_at ASC`, 
+       ORDER BY c.created_at ASC`, // ASC so the oldest/first comments appear at the top
       [entryId]
     );
 
-    // Pack together and send to React
+    // 3. Package them together and send them to React
     const storyData = {
       ...entries[0],
       comments: comments

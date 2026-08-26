@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
+import ResponseCard from '../components/ui/ResponseCard';
 import './Account.css'; 
 
 const calculateTimeAgo = (timestamp) => {
@@ -88,12 +89,11 @@ export default function Profile() {
       excerpt: like.content,
       initialIsLiked: false 
     })),
-    commented: profileData.responses.map(res => ({
+    commented: accountData.responses.map(res => ({
       id: res.id,
-      username: profileData.profile.username,
-      title: `Response to Entry #${res.entry_id}`,
-      excerpt: res.content,
-      initialIsLiked: false
+      username: accountData.profile.username,
+      title: `Response to @${res.op_username}`, // Dynamic Title
+      excerpt: res.content
     }))
   };
 
@@ -142,14 +142,24 @@ export default function Profile() {
         <div className="feed-grid">
           {currentFeed.length > 0 ? (
             currentFeed.map(post => (
-              <StoryCard 
-                key={post.id} 
-                id={post.id}
-                username={post.username}
-                title={post.title}
-                excerpt={post.excerpt} 
-                initialIsLiked={post.initialIsLiked}
-              />
+              activeTab === 'commented' ? (
+                <ResponseCard 
+                  key={post.id} 
+                  id={post.id} 
+                  username={post.username} 
+                  title={post.title} 
+                  excerpt={post.excerpt} 
+                />
+              ) : (
+                <StoryCard 
+                  key={post.id} 
+                  id={post.id}
+                  username={post.username}
+                  title={post.title}
+                  excerpt={post.excerpt} 
+                  initialIsLiked={post.initialIsLiked}
+                />
+              )
             ))
           ) : (
             <div className="empty-state"><p>No data found in this directory.</p></div>

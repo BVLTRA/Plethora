@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext';
+import ReplyCard from '../components/ui/ReplyCard';
 import './ReadStory.css';
 
 export default function ReadStory() {
@@ -164,9 +165,21 @@ export default function ReadStory() {
           <h3 className="replies-heading">Responses</h3>
           
           <div className="replies-grid">
-            <div className="empty-replies">
-              <p>No replies found yet.</p>
-            </div>
+            {story.comments && story.comments.length > 0 ? (
+              story.comments.map(comment => (
+                <ReplyCard 
+                  key={comment.id}
+                  username={comment.username}
+                  opUsername={story.username} 
+                  content={comment.content}
+                  timestamp={comment.created_at}
+                />
+              ))
+            ) : (
+              <div className="empty-replies">
+                <p>No signals detected yet.</p>
+              </div>
+            )}
           </div>
         </section>
 

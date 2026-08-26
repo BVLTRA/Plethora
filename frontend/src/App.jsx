@@ -6,6 +6,8 @@ import HeroSection from "@/components/Hero";
 
 import Discover from './pages/Discover'; 
 import Share from './pages/Share';
+import WriteReply from './pages/WriteReply';
+import ReadComment from './pages/ReadComment';
 import Account from './pages/Account';
 import ReadStory from './pages/ReadStory';
 import Auth from './pages/Auth';
@@ -23,6 +25,8 @@ export default function App() {
         <Route path="/" element={<HeroSection />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/share" element={<Share />} />
+        <Route path="/reply/:id" element={<WriteReply />} />
+        <Route path="/comment/:id" element={<ReadComment />} />
         <Route path="/account" element={<Account />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/complete-account" element={<CompleteAccount />} />
