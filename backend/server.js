@@ -478,7 +478,23 @@ app.get('/api/entries/:id', async (req, res) => {
       return res.status(404).json({ error: 'Signal not found or lost to the void.' });
     }
 
-    res.status(200).json(entries[0]);
+    // Grab all the responses attached to this signal
+    const [comments] = await db.query(
+      `SELECT c.id, c.content, c.created_at, u.username
+       FROM comments c
+       JOIN users u ON c.user_id = u.id
+       WHERE c.entry_id = ? AND c.status = 'published'
+       ORDER BY c.created_at ASC`, 
+      [entryId]
+    );
+
+    // Pack together and send to React
+    const storyData = {
+      ...entries[0],
+      comments: comments
+    };
+
+    res.status(200).json(storyData);
   } catch (error) {
     console.error("Read Story Error:", error);
     res.status(500).json({ error: 'Failed to retrieve the signal.' });
