@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import ResponseCard from '../components/ui/ResponseCard';
+import AlertModal from '../components/ui/AlertModal';
 import './Account.css';
 import './Auth.css';
 
@@ -30,10 +31,17 @@ export default function Account() {
   const [accountData, setAccountData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Modal State
+  // Settings Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteStage, setDeleteStage] = useState(0); // 0 = default, 1 = asking about entries
+  const [deleteStage, setDeleteStage] = useState(0); 
   const [editForm, setEditForm] = useState({ username: '', email: '', quote: '', password: '' });
+
+  // Alert Modal State
+  const [modal, setModal] = useState({ isOpen: false, message: '', isConfirm: false, onConfirm: null, onCloseAction: null });
+
+  const showAlert = (msg, onCloseAction = null) => {
+    setModal({ isOpen: true, message: msg, isConfirm: false, onConfirm: null, onCloseAction });
+  };
 
   useEffect(() => {
     if (!user) {
@@ -47,7 +55,6 @@ export default function Account() {
         if (response.ok) {
           const data = await response.json();
           setAccountData(data);
-          // Pre-fill the edit form with existing data
           setEditForm({
             username: data.profile.username,
             email: data.profile.email || '',
@@ -80,17 +87,28 @@ export default function Account() {
       });
       
       if (response.ok) {
-        // Update the global Context so the Navbar changes
+        // Update global Context
         login({ ...user, username: editForm.username, email: editForm.email });
-        window.alert("Node updated.");
+        
+        // Dynamically update local profile data so don't have to hard-refresh
+        setAccountData(prev => ({
+          ...prev,
+          profile: {
+            ...prev.profile,
+            username: editForm.username,
+            quote: editForm.quote
+          }
+        }));
+
         setIsModalOpen(false);
-        window.location.reload(); // refresh to pull the new SQL data
+        showAlert("Account info updated successfully.");
       } else {
         const data = await response.json();
-        window.alert(data.error);
+        showAlert(data.error);
       }
     } catch (error) {
       console.error(error);
+      showAlert("The diary is unresponsive.");
     }
   };
 
@@ -103,19 +121,27 @@ export default function Account() {
       });
 
       if (response.ok) {
-        logout();
-        window.alert(keepEntries ? "You are now a ghost. Node disconnected." : "All data erased. Node destroyed.");
-        navigate('/');
+        setIsModalOpen(false); // Close the settings panel
+        
+        // Trigger the alert, and pass the logout/navigate logic as a callback 
+        // so it only fires AFTER they click "Acknowledge"
+        showAlert(
+          keepEntries ? "You are now a ghost. Account disconnected." : "All data erased. Account destroyed.",
+          () => {
+            logout();
+            navigate('/');
+          }
+        );
       }
     } catch (error) {
       console.error(error);
+      showAlert("Failed to sever connection.");
     }
   };
 
-  if (isLoading || !accountData) return <div className="loading-state">Syncing with grid...</div>;
+  if (isLoading || !accountData) return <div className="loading-state">Syncing with diary...</div>;
 
   const feeds = {
-    // Filter only published entries for the main tab
     authored: accountData.entries
       .filter(entry => entry.status === 'published')
       .map(entry => ({
@@ -126,7 +152,6 @@ export default function Account() {
         initialIsLiked: !!entry.is_liked_by_user
       })),
     
-    // Filter only drafts into a dedicated array
     drafts: accountData.entries
       .filter(entry => entry.status === 'draft')
       .map(entry => ({
@@ -233,7 +258,7 @@ export default function Account() {
                 </header>
                 
                 <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
-                  Do you want to erase your entries from the grid, or leave them behind as an anonymous ghost?
+                  Do you want to erase your entries from the diary, or leave them behind as an anonymous ghost?
                 </p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -267,6 +292,18 @@ export default function Account() {
           </div>
         </div>
       )}
+
+      {/* --- GLOBAL ALERT MODAL --- */}
+      <AlertModal 
+        isOpen={modal.isOpen} 
+        message={modal.message} 
+        isConfirm={modal.isConfirm}
+        onConfirm={modal.onConfirm}
+        onClose={() => {
+          setModal({ ...modal, isOpen: false });
+          if (modal.onCloseAction) modal.onCloseAction();
+        }} 
+      />
 
       <header className="profile-header">
         <div className="profile-container">
