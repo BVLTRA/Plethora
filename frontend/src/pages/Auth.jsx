@@ -32,7 +32,7 @@ export default function Auth() {
       // --- SIGNUP PROCESS ---
       try {
         // Send data to backend port
-        const response = await fetch('http://localhost:5000/api/signup', {
+        const response = await fetch('http://localhost/plethora_api/signup.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export default function Auth() {
       // --- LOGIN MECHANISM ---
       try {
         // Send data to backend port
-        const response = await fetch('http://localhost:5000/api/login', {
+        const response = await fetch('http://localhost/plethora_api/login.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
