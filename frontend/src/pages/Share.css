@@ -84,7 +84,7 @@
 
 textarea.story-editor {
   width: calc(100% - 4rem);
-  min-height: 300px;
+  min-height: 250px;
   background: transparent;
   border: none;
   color: #d1d5db;
