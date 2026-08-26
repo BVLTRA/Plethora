@@ -113,7 +113,7 @@ export default function Auth() {
     onSuccess: async (tokenResponse) => {
       try {
         // Send Google token to backend
-        const response = await fetch('http://localhost:5000/api/google-auth', {
+        const response = await fetch('http://localhost/plethora_api/google.php?action=auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: tokenResponse.access_token })

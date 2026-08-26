@@ -35,7 +35,7 @@ export default function WriteReply() {
   useEffect(() => {
     const fetchOriginalStory = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/entries/${id}`);
+        const response = await fetch(`http://localhost/plethora_api/story.php?id=${id}`);
         if (response.ok) {
           const data = await response.json();
           setStory(data);
@@ -56,7 +56,7 @@ export default function WriteReply() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/comments", {
+      const response = await fetch("http://localhost/plethora_api/comments.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

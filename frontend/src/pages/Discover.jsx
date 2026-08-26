@@ -14,7 +14,7 @@ export default function Discover() {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const url = user ? `http://localhost:5000/api/discover?userId=${user.id}` : 'http://localhost:5000/api/discover';
+        const url = user ? `http://localhost/plethora_api/discover.php?userId=${user.id}` : 'http://localhost/plethora_api/discover.php';
 
         const response = await fetch(url);
         if (response.ok) {

@@ -51,7 +51,7 @@ export default function Account() {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/account/${user.id}`);
+        const response = await fetch(`http://localhost/plethora_api/account.php?id=${user.id}`);
         if (response.ok) {
           const data = await response.json();
           setAccountData(data);
@@ -80,7 +80,7 @@ export default function Account() {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+      const response = await fetch(`http://localhost/plethora_api/users.php?id=${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm)
@@ -112,32 +112,26 @@ export default function Account() {
     }
   };
 
-  const executeDeletion = async (keepEntries) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keepEntries })
-      });
-
-      if (response.ok) {
-        setIsModalOpen(false); // Close the settings panel
+  const fetchAccountData = async () => {
+      try {
+        const response = await fetch(`http://localhost/plethora_api/account.php?id=${user.id}`);
         
-        // Trigger the alert, and pass the logout/navigate logic as a callback 
-        // so it only fires AFTER they click "Acknowledge"
-        showAlert(
-          keepEntries ? "You are now a ghost. Account disconnected." : "All data erased. Account destroyed.",
-          () => {
-            logout();
-            navigate('/');
-          }
-        );
+        if (response.ok) {
+          const data = await response.json();
+          setAccountData(data);
+          setEditForm({
+            username: data.profile.username,
+            email: data.profile.email || '',
+            quote: data.profile.quote || '',
+            password: ''
+          });
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-      showAlert("Failed to sever connection.");
-    }
-  };
+    };
 
   if (isLoading || !accountData) return <div className="loading-state">Syncing with diary...</div>;
 
