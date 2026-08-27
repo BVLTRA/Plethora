@@ -8,7 +8,7 @@ import './Auth.css';
 export default function Share() {
   const { user } = useAuth(); 
   const navigate = useNavigate();
-  const { id } = useParams(); // Detects if we are in "Edit Mode"
+  const { id } = useParams(); // Detects if in "Edit Mode"
 
   const [modal, setModal] = useState({ isOpen: false, message: '', isConfirm: false, onConfirm: null });
   const showAlert = (msg) => setModal({ isOpen: true, message: msg, isConfirm: false });
@@ -103,7 +103,7 @@ export default function Share() {
           navigate('/account');
         } catch (e) {
           console.error(e);
-          showAlert("Failed to erase signal.");
+          showAlert("Failed to erase entry.");
         }
       } else {
         setTitle('');
