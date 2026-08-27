@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 import { WovenLightHero } from './ui/woven-light-hero';
 
 export default function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="hero-container">
       
@@ -20,8 +23,20 @@ export default function HeroSection() {
             We weren't built to carry it all alone. Plethora is a public, uncurated stream of human weight. No profiles. No search bar. Just the raw signal of what people are dealing with right now.
           </p>
           <div className="hero-actions">
-            <button className="btn-outline">Learn more</button>
-            <button className="btn-solid">Release</button>
+            <button 
+              className="btn-outline" 
+              onClick={() => document.getElementById('manifesto')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Learn more
+            </button>
+            
+            {/* Route directly to the share page */}
+            <button 
+              className="btn-solid" 
+              onClick={() => navigate('/share')}
+            >
+              Release
+            </button>
           </div>
         </div>
       </div>
