@@ -112,26 +112,28 @@ export default function Account() {
     }
   };
 
-  const fetchAccountData = async () => {
-      try {
-        const response = await fetch(`http://localhost/plethora_api/account.php?id=${user.id}`);
-        
-        if (response.ok) {
-          const data = await response.json();
-          setAccountData(data);
-          setEditForm({
-            username: data.profile.username,
-            email: data.profile.email || '',
-            quote: data.profile.quote || '',
-            password: ''
-          });
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-      } finally {
-        setIsLoading(false);
+  // The missing function that fires the database wipe
+  const executeDeletion = async (keepEntries) => {
+    try {
+      const response = await fetch(`http://localhost/plethora_api/users.php?id=${user.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keepEntries })
+      });
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        logout(); // Erase context and localStorage
+        navigate('/'); // Drop back to the landing page
+      } else {
+        const data = await response.json();
+        showAlert(data.error || "Failed to disconnect node.");
       }
-    };
+    } catch (error) {
+      console.error("Deletion error:", error);
+      showAlert("The grid is currently unresponsive.");
+    }
+  };
 
   if (isLoading || !accountData) return <div className="loading-state">Syncing with diary...</div>;
 
