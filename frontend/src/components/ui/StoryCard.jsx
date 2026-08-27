@@ -21,7 +21,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
     try {
       if (!isLiked) {
         // Send the Like to the database
-        const response = await fetch('http://localhost:5000/api/likes', {
+        const response = await fetch('http://localhost/plethora_api/likes.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })
@@ -31,7 +31,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
         if (!response.ok) setIsLiked(false);
       } else {
         // Send the Un-Like to the database
-        const response = await fetch('http://localhost:5000/api/likes', {
+        const response = await fetch('http://localhost/plethora_api/likes.php', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })

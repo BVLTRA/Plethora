@@ -21,8 +21,8 @@ export default function ReadStory() {
     const fetchStory = async () => {
       try {
         const url = user 
-          ? `http://localhost:5000/api/entries/${id}?visitorId=${user.id}`
-          : `http://localhost:5000/api/entries/${id}`;
+          ? `http://localhost/plethora_api/story.php?id=${id}&visitorId=${user.id}`
+          : `http://localhost/plethora_api/story.php?id=${id}`;
 
         const response = await fetch(url);
         
@@ -58,14 +58,14 @@ export default function ReadStory() {
 
     try {
       if (!isLiked) {
-        const response = await fetch('http://localhost:5000/api/likes', {
+        const response = await fetch('http://localhost/plethora_api/likes.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })
         });
         if (!response.ok) throw new Error("Failed to like");
       } else {
-        const response = await fetch('http://localhost:5000/api/likes', {
+        const response = await fetch('http://localhost/plethora_api/likes.php', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })

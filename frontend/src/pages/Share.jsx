@@ -27,7 +27,7 @@ export default function Share() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/entries', {
+      const response = await fetch('http://localhost/plethora_api/create_entry.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -54,14 +54,13 @@ export default function Share() {
   };
 
   const handleClear = () => {
-  showConfirm("Delete this draft? (Once it's gone, it's gone.)", () => {
-    setTitle('');
-    setContent('');
-  });
-};
+    showConfirm("Delete this draft? (Once it's gone, it's gone.)", () => {
+      setTitle('');
+      setContent('');
+    });
+  };
 
   // --- GUEST BLOCK ---
-  // If no user is detected, render background and modal, but NOT the editor.
   if (!user) {
     return (
       <main className="share-page">
@@ -116,7 +115,6 @@ export default function Share() {
 
         {/* Editor Section */}
         <div className="editor-wrapper">
-          {/* Title Input */}
           <input 
             type="text"
             className="story-title"
@@ -126,7 +124,6 @@ export default function Share() {
             spellCheck="false"
           />
 
-          {/* Body Textarea */}
           <textarea 
             className="story-editor"
             placeholder="Type out what feels right to you..."
@@ -171,12 +168,12 @@ export default function Share() {
 
       </div>
       <AlertModal 
-  isOpen={modal.isOpen} 
-  message={modal.message} 
-  isConfirm={modal.isConfirm}
-  onConfirm={modal.onConfirm}
-  onClose={() => setModal({ ...modal, isOpen: false })} 
-/>
+        isOpen={modal.isOpen} 
+        message={modal.message} 
+        isConfirm={modal.isConfirm}
+        onConfirm={modal.onConfirm}
+        onClose={() => setModal({ ...modal, isOpen: false })} 
+      />
     </main>
   );
 }

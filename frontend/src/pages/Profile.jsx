@@ -35,8 +35,8 @@ export default function Profile() {
       try {
         // If a logged-in user is visiting, attach their ID so hearts load correctly
         const url = user 
-          ? `http://localhost:5000/api/profile/${username}?visitorId=${user.id}` 
-          : `http://localhost:5000/api/profile/${username}`;
+          ? `http://localhost/plethora_api/profile.php?username=${username}?visitorId=${user.id}` 
+          : `http://localhost/plethora_api/profile.php?username=${username}`;
 
         const response = await fetch(url);
         if (response.ok) {

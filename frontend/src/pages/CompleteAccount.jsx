@@ -24,7 +24,7 @@ export default function CompleteAccount() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/google-signup', {
+      const response = await fetch('http://localhost/plethora_api/google.php?action=signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
