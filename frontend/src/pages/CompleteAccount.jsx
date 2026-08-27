@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AlertModal from '../components/ui/AlertModal';
 import './Auth.css';
 
 export default function CompleteAccount() {
@@ -15,6 +16,16 @@ export default function CompleteAccount() {
   const [password, setPassword] = useState('');
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
+  // Alert Modal State
+  const [modal, setModal] = useState({ isOpen: false, message: '', isConfirm: false, onConfirm: null, onCloseAction: null });
+
+  const showAlert = (msg, onCloseAction = null) => {
+    setModal({ isOpen: true, message: msg, isConfirm: false, onConfirm: null, onCloseAction });
+  };
+  const showConfirm = (msg, action) => {
+    setModal({ isOpen: true, message: msg, isConfirm: true, onConfirm: action, onCloseAction: null });
+  };
 
   // Security Catch: If they try to force their way to this URL without Google data, kick them out
   useEffect(() => {
@@ -38,24 +49,23 @@ export default function CompleteAccount() {
 
       if (response.ok) {
         login(data.user);
-        window.alert("Node created. Welcome to the grid.");
-        navigate('/discover');
+        showAlert("Node created. Welcome to the grid.", () => navigate('/discover'));
       } else {
-        window.alert(`Transmission failed: ${data.error}`);
+        showAlert(`Transmission failed: ${data.error}`);
       }
     } catch (error) {
       console.error("Network error:", error);
+      showAlert("The grid is currently unresponsive.");
     }
   };
 
   const handleCancel = () => {
-    const proceed = window.confirm(
-      "Because we respect your privacy, leaving this process will delete what has been gathered for account creation purposes.\n\nDo you wish to continue?"
+    showConfirm(
+      "Because we respect your privacy, leaving this process will delete what has been gathered for account creation purposes.\n\nDo you wish to continue?",
+      () => {
+        navigate('/discover');
+      }
     );
-    if (proceed) {
-      // By navigating away, React destroys the googleData state currently in RAM.
-      navigate('/discover');
-    }
   };
 
   const isSubmitDisabled = !username || !password || !isAgeVerified || !isTermsAccepted;
@@ -150,6 +160,18 @@ export default function CompleteAccount() {
           </button>
         </div>
       </div>
+      
+      {/* Custom Alert Modal Instance */}
+      <AlertModal 
+        isOpen={modal.isOpen} 
+        message={modal.message} 
+        isConfirm={modal.isConfirm}
+        onConfirm={modal.onConfirm}
+        onClose={() => {
+          setModal({ ...modal, isOpen: false });
+          if (modal.onCloseAction) modal.onCloseAction();
+        }} 
+      />
     </main>
   );
 }
