@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/Hero";
+import Home from './pages/Home';
 
 import Discover from './pages/Discover'; 
 import Share from './pages/Share';
@@ -22,7 +23,7 @@ export default function App() {
       <Navbar />
       
       <Routes>
-        <Route path="/" element={<HeroSection />} />
+        <Route path="/" element={<Home />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/share" element={<Share />} />
         <Route path="/reply/:id" element={<WriteReply />} />
