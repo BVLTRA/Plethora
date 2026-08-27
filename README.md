@@ -42,36 +42,37 @@ This architecture was shaped by three specific constraints that dictate both the
 
 ## Demonstrations & Documentation
 
-*   **Demonstration Video:** [Insert Drive Link Hereeeeee]
+*   **Demonstration Video:** [https://drive.google.com/drive/folders/1uAG9z5n2Ix_RZ91k1ivxy8J14gO0Dxh6?usp=sharing]
 *   **ER Diagram:** Included in root folder as `ER_Diagram.png`
 *   **SQL Export:** Included in root folder as `plethora.sql`
 
-### System Mockups
+### System Mockup
+![Mockuo](./frontend/public/screenshots/Mockup.png)
 
 ### System Screenshots
 
-**1. The Entry Point (Home)**
-![Login Screen Render](./public/screenshots/Login.png)
+**1. Signup**
+![Login Screen Render](./frontend/public/screenshots/Login.png)
+*The the beginning to an environment of openness*
+
+**2. Home**
+![Home Screen Render](./frontend/public/screenshots/Hero.png)
 *The digital sanctuary. Features the interactive WebGL canvas and the architectural manifesto explaining the system's core constraints.*
 
-**2. The Entry Point (Home)**
-![Home Screen Render](./public/screenshots/Hero.png)
-*The digital sanctuary. Features the interactive WebGL canvas and the architectural manifesto explaining the system's core constraints.*
-
-**3. The Grid (Discover)**
-![Discover Feed Render](./public/screenshots/Explore.png)
+**3. Discover**
+![Discover Feed Render](./frontend/public/screenshots/Explore.png)
 *The uncurated, chronological stream of human experience. No search bar, no algorithms. Just the raw signal.*
 
-**4. The Broadcast (Editor)**
-![Editor Render](./public/screenshots/Share.png)
+**4. Editor**
+![Editor Render](./frontend/public/screenshots/Share.png)
 *The isolated writing environment. High-contrast and minimal, allowing the author to focus entirely on externalizing their thoughts before saving a draft or publishing.*
 
-**5. The Signal (Read & Respond)**
-![Read Story Render](./public/screenshots/ViewPost.png)
+**5. Read & Respond**
+![Read Story Render](./frontend/public/screenshots/ViewPost.png)
 *A singular entry expanded. Displays the author's formatted text alongside chronological responses from the community and interaction metrics.*
 
-**6. Node Access (Account Dashboard)**
-![Account Render](./public/screenshots/Account.png)
+**6. Account Dashboard**
+![Account Render](./frontend/public/screenshots/Account.png)
 *The user's private command center. Manages published entries, private drafts, interaction history, and the permanent system disconnect (purge) controls.*
 
 ---
