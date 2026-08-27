@@ -13,6 +13,8 @@ export default function ReadStory() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const hasClearance = user?.role === 'admin' || user?.id === story?.author_id;
+
   // Short-term memory for interactions
   const [isLiked, setIsLiked] = useState(false);
   const [ackCount, setAckCount] = useState(0);
@@ -80,6 +82,34 @@ export default function ReadStory() {
     }
   };
 
+  const executeDeleteSequence = async () => {
+    if (!window.confirm("Are you sure you want to permanently erase this signal?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost/plethora_api/delete_entry.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          entryId: id, 
+          requesterId: user.id 
+        })
+      });
+
+      if (response.ok) {
+        // Once deleted, drop the user back to the main feed
+        navigate('/discover');
+      } else {
+        const data = await response.json();
+        window.alert(data.error || "Failed to erase signal.");
+      }
+    } catch (error) {
+      console.error("Deletion error:", error);
+      window.alert("The grid is currently unresponsive.");
+    }
+  };
+  
   const handleCommentClick = () => {
     navigate(`/reply/${id}`);
   };
@@ -113,7 +143,7 @@ export default function ReadStory() {
     <main className="read-page">
       <div className="read-container">
         
-        {/* --- ORIGINAL SIGNAL --- */}
+        {/* --- ORIGINAL ENTRY --- */}
         <article className="original-story">
           <header className="story-header">
             {story.title && <h1 className="story-title">{story.title}</h1>}
@@ -132,6 +162,16 @@ export default function ReadStory() {
           <div className="interaction-bar">
             
             <div className="interaction-buttons">
+              {hasClearance && (
+  <button 
+    className="icon-btn delete-btn" 
+    onClick={executeDeleteSequence} 
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" />
+    </svg>
+  </button>
+)}
               <button 
                 className={`circular-action-btn like-btn ${isLiked ? 'liked' : ''}`} 
                 onClick={handleLike} 

@@ -347,6 +347,7 @@ export default function Account() {
                   title={post.title}
                   excerpt={post.excerpt} 
                   initialIsLiked={post.initialIsLiked}
+                  isDraft={activeTab === 'drafts'} 
                 />
               )
             ))

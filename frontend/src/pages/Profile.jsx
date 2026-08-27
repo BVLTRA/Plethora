@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import ResponseCard from '../components/ui/ResponseCard';
@@ -22,8 +22,9 @@ const calculateTimeAgo = (timestamp) => {
 };
 
 export default function Profile() {
-  const { username } = useParams(); // Grabs username from URL
-  const { user } = useAuth(); // visitor
+  const { username } = useParams(); 
+  const { user } = useAuth(); 
+  const navigate = useNavigate(); // Added for the Admin deletion redirect
   
   const [activeTab, setActiveTab] = useState('authored');
   const [profileData, setProfileData] = useState(null);
@@ -33,9 +34,9 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // If a logged-in user is visiting, attach their ID so hearts load correctly
+        // ---> THE FIX: Swapped the second ? for an & <---
         const url = user 
-          ? `http://localhost/plethora_api/profile.php?username=${username}?visitorId=${user.id}` 
+          ? `http://localhost/plethora_api/profile.php?username=${username}&visitorId=${user.id}` 
           : `http://localhost/plethora_api/profile.php?username=${username}`;
 
         const response = await fetch(url);
@@ -57,6 +58,30 @@ export default function Profile() {
 
     fetchProfileData();
   }, [username, user]);
+
+  const wipeProfile = async (targetId) => {
+    if (!window.confirm("ADMIN WARNING: Are you sure you want to completely erase this user and all their signals? This cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost/plethora_api/users.php?id=${targetId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keepEntries: false }) 
+      });
+
+      if (response.ok) {
+        window.alert("Node terminated.");
+        navigate('/discover');
+      } else {
+        window.alert("Failed to terminate node.");
+      }
+    } catch (error) {
+      console.error("Termination error:", error);
+      window.alert("The grid is currently unresponsive.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -105,7 +130,19 @@ export default function Profile() {
       <header className="profile-header">
         <div className="profile-container">
           <div className="profile-readout">
-            <h1 className="profile-username">@{profileData.profile.username}</h1>
+            <h1 className="profile-username">@{profileData.profile.username}</h1> 
+            
+            {/* Admin Terminate Button */}
+            {user?.role === 'admin' && (
+              <button 
+                onClick={() => wipeProfile(profileData.profile.id)}
+                className="btn-action" 
+                style={{ borderColor: '#dc2626', color: '#dc2626', marginLeft: '1rem' }}
+              >
+                Terminate Node
+              </button>
+            )}
+
             <div className="profile-status">
               <span 
                 className="status-indicator" 
