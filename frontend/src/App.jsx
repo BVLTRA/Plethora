@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/Hero";
 import Home from './pages/Home';
+import Footer from './components/ui/Footer';
 
 import Discover from './pages/Discover'; 
 import Share from './pages/Share';
@@ -38,6 +39,7 @@ export default function App() {
 
         <Route path="/story/:id" element={<ReadStory />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
