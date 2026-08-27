@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import StoryCard from '../components/ui/StoryCard'; 
 import ResponseCard from '../components/ui/ResponseCard';
+import AlertModal from '../components/ui/AlertModal';
 import './Account.css'; 
 
 const calculateTimeAgo = (timestamp) => {
@@ -24,17 +25,27 @@ const calculateTimeAgo = (timestamp) => {
 export default function Profile() {
   const { username } = useParams(); 
   const { user } = useAuth(); 
-  const navigate = useNavigate(); // Added for the Admin deletion redirect
+  const navigate = useNavigate(); 
   
   const [activeTab, setActiveTab] = useState('authored');
   const [profileData, setProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Custom Alert Modal State
+  const [modal, setModal] = useState({ isOpen: false, message: '', isConfirm: false, onConfirm: null, onCloseAction: null });
+
+  const showAlert = (msg, onCloseAction = null) => {
+    setModal({ isOpen: true, message: msg, isConfirm: false, onConfirm: null, onCloseAction });
+  };
+  
+  const showConfirm = (msg, action) => {
+    setModal({ isOpen: true, message: msg, isConfirm: true, onConfirm: action, onCloseAction: null });
+  };
+
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // ---> THE FIX: Swapped the second ? for an & <---
         const url = user 
           ? `http://localhost/plethora_api/profile.php?username=${username}&visitorId=${user.id}` 
           : `http://localhost/plethora_api/profile.php?username=${username}`;
@@ -59,28 +70,29 @@ export default function Profile() {
     fetchProfileData();
   }, [username, user]);
 
-  const wipeProfile = async (targetId) => {
-    if (!window.confirm("ADMIN WARNING: Are you sure you want to completely erase this user and all their signals? This cannot be undone.")) {
-      return;
-    }
+  const wipeProfile = (targetId) => {
 
-    try {
-      const response = await fetch(`http://localhost/plethora_api/users.php?id=${targetId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keepEntries: false }) 
-      });
+    showConfirm(
+      "ADMIN WARNING: Are you sure you want to completely erase this user and all their signals? This cannot be undone.",
+      async () => {
+        try {
+          const response = await fetch(`http://localhost/plethora_api/users.php?id=${targetId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ keepEntries: false }) 
+          });
 
-      if (response.ok) {
-        window.alert("Node terminated.");
-        navigate('/discover');
-      } else {
-        window.alert("Failed to terminate node.");
+          if (response.ok) {
+            showAlert("Node terminated.", () => navigate('/discover'));
+          } else {
+            showAlert("Failed to terminate node.");
+          }
+        } catch (error) {
+          console.error("Termination error:", error);
+          showAlert("The grid is currently unresponsive.");
+        }
       }
-    } catch (error) {
-      console.error("Termination error:", error);
-      window.alert("The grid is currently unresponsive.");
-    }
+    );
   };
 
   if (isLoading) {
@@ -204,6 +216,18 @@ export default function Profile() {
           )}
         </div>
       </section>
+
+      {/* --- GLOBAL ALERT MODAL INSTANCE --- */}
+      <AlertModal 
+        isOpen={modal.isOpen} 
+        message={modal.message} 
+        isConfirm={modal.isConfirm}
+        onConfirm={modal.onConfirm}
+        onClose={() => {
+          setModal({ ...modal, isOpen: false });
+          if (modal.onCloseAction) modal.onCloseAction();
+        }} 
+      />
     </main>
   );
 }

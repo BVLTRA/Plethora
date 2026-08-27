@@ -188,6 +188,9 @@ PRIMARY KEY (user_id, entry_id)
 
 ```
 
+### ERD
+![ERD](./frontend/public/screenshots/ERD.png)
+
 ---
 
 ## Project Structure
