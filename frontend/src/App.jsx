@@ -26,6 +26,7 @@ export default function App() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/share" element={<Share />} />
         <Route path="/reply/:id" element={<WriteReply />} />
+        <Route path="/edit/:id" element={<Share />} />
         <Route path="/comment/:id" element={<ReadComment />} />
         <Route path="/account" element={<Account />} />
         <Route path="/login" element={<Auth />} />
