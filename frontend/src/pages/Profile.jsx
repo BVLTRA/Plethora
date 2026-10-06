@@ -23,6 +23,8 @@ const calculateTimeAgo = (timestamp) => {
 };
 
 export default function Profile() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { username } = useParams(); 
   const { user } = useAuth(); 
   const navigate = useNavigate(); 
@@ -47,8 +49,8 @@ export default function Profile() {
     const fetchProfileData = async () => {
       try {
         const url = user 
-          ? `http://localhost/plethora_api/profile.php?username=${username}&visitorId=${user.id}` 
-          : `http://localhost/plethora_api/profile.php?username=${username}`;
+          ? `${apiUrl}/profile.php?username=${username}&visitorId=${user.id}` 
+          : `${apiUrl}/profile.php?username=${username}`;
 
         const response = await fetch(url);
         if (response.ok) {
@@ -76,7 +78,7 @@ export default function Profile() {
       "ADMIN WARNING: Are you sure you want to completely erase this user and all their signals? This cannot be undone.",
       async () => {
         try {
-          const response = await fetch(`http://localhost/plethora_api/users.php?id=${targetId}`, {
+          const response = await fetch(`${apiUrl}/users.php?id=${targetId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ keepEntries: false }) 

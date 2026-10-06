@@ -9,12 +9,13 @@ export default function Discover() {
   const { user } = useAuth();
   const [feed, setFeed] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Fetch feed from backend as soon as page loads
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const url = user ? `http://localhost/plethora_api/discover.php?userId=${user.id}` : 'http://localhost/plethora_api/discover.php';
+        const url = user ? `${apiUrl}/discover.php?userId=${user.id}` : '${apiUrl}/discover.php';
 
         const response = await fetch(url);
         if (response.ok) {

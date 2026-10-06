@@ -5,6 +5,8 @@ import "../../pages/Discover.css";
 import "./StoryCard.css";
 
 export default function StoryCard({ id, username, title, excerpt, initialIsLiked, isDraft }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const { user } = useAuth(); // Identify who is clicking
   const [isLiked, setIsLiked] = useState(initialIsLiked || false); // Short-term memory for button
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
     try {
       if (!isLiked) {
         // Send the Like to the database
-        const response = await fetch('http://localhost/plethora_api/likes.php', {
+        const response = await fetch('${apiUrl}/likes.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })
@@ -31,7 +33,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
         if (!response.ok) setIsLiked(false);
       } else {
         // Send the Un-Like to the database
-        const response = await fetch('http://localhost/plethora_api/likes.php', {
+        const response = await fetch('${apiUrl}/likes.php', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })

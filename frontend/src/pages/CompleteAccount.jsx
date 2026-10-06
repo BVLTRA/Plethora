@@ -5,6 +5,8 @@ import AlertModal from '../components/ui/AlertModal';
 import './Auth.css';
 
 export default function CompleteAccount() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -35,7 +37,7 @@ export default function CompleteAccount() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost/plethora_api/google.php?action=signup', {
+      const response = await fetch('${apiUrl}/google.php?action=signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

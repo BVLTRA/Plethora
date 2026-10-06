@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './ReadStory.css';
 
 export default function ReadStory() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const { id } = useParams();
   const [reply, setReply] = useState('');
   const navigate = useNavigate();

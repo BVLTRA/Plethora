@@ -6,6 +6,8 @@ import "./Share.css";
 import "./ReadStory.css";
 
 export default function WriteReply() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { id } = useParams(); // Entry ID we are replying to
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ export default function WriteReply() {
   useEffect(() => {
     const fetchOriginalStory = async () => {
       try {
-        const response = await fetch(`http://localhost/plethora_api/story.php?id=${id}`);
+        const response = await fetch(`${apiUrl}/story.php?id=${id}`);
         if (response.ok) {
           const data = await response.json();
           setStory(data);
@@ -56,7 +58,7 @@ export default function WriteReply() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost/plethora_api/comments.php", {
+      const response = await fetch("${apiUrl}/comments.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

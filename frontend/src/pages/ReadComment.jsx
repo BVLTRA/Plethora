@@ -5,6 +5,8 @@ import ReplyCard from '../components/ui/ReplyCard';
 import './ReadStory.css';
 
 export default function ReadComment() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { id } = useParams(); // COMMENT id
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -19,8 +21,8 @@ export default function ReadComment() {
     const fetchStack = async () => {
       try {
         const url = user 
-          ? `http://localhost/plethora_api/comments.php?id=${id}?visitorId=${user.id}`
-          : `http://localhost/plethora_api/comments.php?id=${id}`;
+          ? `${apiUrl}/comments.php?id=${id}?visitorId=${user.id}`
+          : `${apiUrl}/comments.php?id=${id}`;
 
         const response = await fetch(url);
         if (response.ok) {
@@ -47,7 +49,7 @@ export default function ReadComment() {
     try {
       // NOTEEEEe: Target parent entry_id, NOT the comment id
       const method = !isLiked ? 'POST' : 'DELETE';
-      const response = await fetch('http://localhost/plethora_api/likes.php', {
+      const response = await fetch('${apiUrl}/likes.php', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, entryId: data.entry_id })

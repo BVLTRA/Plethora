@@ -8,6 +8,8 @@ import { WovenLightHero } from '../components/ui/woven-light-hero';
 import AlertModal from '../components/ui/AlertModal';
 
 export default function Auth() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
 
@@ -32,7 +34,7 @@ export default function Auth() {
       // --- SIGNUP PROCESS ---
       try {
         // Send data to backend port
-        const response = await fetch('http://localhost/plethora_api/signup.php', {
+        const response = await fetch('${apiUrl}/signup.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ export default function Auth() {
       // --- LOGIN MECHANISM ---
       try {
         // Send data to backend port
-        const response = await fetch('http://localhost/plethora_api/login.php', {
+        const response = await fetch('${apiUrl}/login.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -113,7 +115,7 @@ export default function Auth() {
     onSuccess: async (tokenResponse) => {
       try {
         // Send Google token to backend
-        const response = await fetch('http://localhost/plethora_api/google.php?action=auth', {
+        const response = await fetch('${apiUrl}/google.php?action=auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: tokenResponse.access_token })

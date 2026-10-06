@@ -6,6 +6,8 @@ import './Share.css';
 import './Auth.css'; 
 
 export default function Share() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth(); 
   const navigate = useNavigate();
   const { id } = useParams(); // Detects if in "Edit Mode"
@@ -24,7 +26,7 @@ export default function Share() {
     if (id && user) {
       const fetchDraft = async () => {
         try {
-          const response = await fetch(`http://localhost/plethora_api/story.php?id=${id}&visitorId=${user.id}`);
+          const response = await fetch(`${apiUrl}/story.php?id=${id}&visitorId=${user.id}`);
           if (response.ok) {
             const data = await response.json();
             // Verify ownership before loading the text
@@ -57,8 +59,8 @@ export default function Share() {
 
     try {
       const endpoint = id 
-        ? 'http://localhost/plethora_api/update_entry.php' 
-        : 'http://localhost/plethora_api/create_entry.php';
+        ? '${apiUrl}/update_entry.php' 
+        : '${apiUrl}/create_entry.php';
 
       const payload = {
         userId: user.id,
@@ -95,7 +97,7 @@ export default function Share() {
       if (id) {
         // If exists in the database, startdeletion
         try {
-          await fetch('http://localhost/plethora_api/delete_entry.php', {
+          await fetch('${apiUrl}/delete_entry.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ entryId: id, requesterId: user.id })

@@ -6,6 +6,8 @@ import AlertModal from "../components/ui/AlertModal";
 import "./ReadStory.css";
 
 export default function ReadStory() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -51,8 +53,8 @@ export default function ReadStory() {
     const fetchStory = async () => {
       try {
         const url = user
-          ? `http://localhost/plethora_api/story.php?id=${id}&visitorId=${user.id}`
-          : `http://localhost/plethora_api/story.php?id=${id}`;
+          ? `${apiUrl}/story.php?id=${id}&visitorId=${user.id}`
+          : `${apiUrl}/story.php?id=${id}`;
 
         const response = await fetch(url);
 
@@ -87,7 +89,7 @@ export default function ReadStory() {
     try {
       if (!isLiked) {
         const response = await fetch(
-          "http://localhost/plethora_api/likes.php",
+          "${apiUrl}/likes.php",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -97,7 +99,7 @@ export default function ReadStory() {
         if (!response.ok) throw new Error("Failed to like");
       } else {
         const response = await fetch(
-          "http://localhost/plethora_api/likes.php",
+          "${apiUrl}/likes.php",
           {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
@@ -120,7 +122,7 @@ export default function ReadStory() {
       async () => {
         try {
           const response = await fetch(
-            "http://localhost/plethora_api/delete_entry.php",
+            "${apiUrl}/delete_entry.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

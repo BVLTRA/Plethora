@@ -60,7 +60,7 @@ app.post('/api/login', async (req, res) => {
     if (rows.length === 0) return res.status(401).json({ error: 'Node not found. Check your email.' });
 
     const user = rows[0];
-    
+
     // Compare the typed password against the stored hash
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) return res.status(401).json({ error: 'Invalid credentials. Access denied.' });
@@ -208,13 +208,13 @@ app.put('/api/users/:id', async (req, res) => {
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
       await db.query(
-        'UPDATE users SET username = ?, email = ?, quote = ?, password_hash = ? WHERE id = ?', 
+        'UPDATE users SET username = ?, email = ?, quote = ?, password_hash = ? WHERE id = ?',
         [username, email, quote, hashedPassword, userId]
       );
     }
     else {
       await db.query(
-        'UPDATE users SET username = ?, email = ?, quote = ? WHERE id = ?', 
+        'UPDATE users SET username = ?, email = ?, quote = ? WHERE id = ?',
         [username, email, quote, userId]
       );
     }
@@ -510,8 +510,11 @@ app.get('/api/entries/:id', async (req, res) => {
   }
 });
 
-// Start up server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Plethora backend signal active on port ${PORT}`);
-});
+// Export app for Vercel Serverless
+module.exports = app;
+
+// Only listen to port if not running on Vercel
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
