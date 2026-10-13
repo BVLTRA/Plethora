@@ -189,3 +189,75 @@
   background-color: #596f62; 
   border-radius: 50%;
 }
+
+/* --- MOBILE RESPONSIVENESS (TERMS & PRIVACY) --- */
+@media (max-width: 768px) {
+  
+  body, html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .privacy-page {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.95) 5%, rgba(0, 0, 0, 0.95) 95%, rgba(0, 0, 0, 0.8) 100%),
+      url('../assets/discoverBG.jpg'); 
+  }
+
+  .legal-header {
+    width: 100%;
+    max-width: 100vw;
+    padding: 2rem !important;
+    box-sizing: border-box !important;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+  }
+
+  .brand-text {
+    font-size: 1.25rem; 
+  }
+
+  .legal-toggle {
+    gap: 0.25rem; 
+  }
+
+  .toggle-btn {
+    padding: 0.4rem 0.8rem; 
+    font-size: 0.85rem; 
+  }
+
+  .privacy-document {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .privacy-title {
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    white-space: normal !important; /* Forces the long title to wrap */
+    word-wrap: break-word; 
+  }
+
+  .terms-date {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .terms-body h2 {
+    font-size: 1.15rem;
+  }
+
+  .terms-body p, 
+  .terms-body li {
+    font-size: 0.95rem; 
+    text-align: left; 
+    white-space: normal;
+    word-wrap: break-word; /* Stops long legal words from breaking the layout */
+  }
+}

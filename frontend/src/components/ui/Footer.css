@@ -3,18 +3,16 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding: 4rem 2rem 2rem 2rem;
   color: #9ca3af;
-  font-family: 'Visuelt Pro', sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin-top: auto; /* Pushes the footer to the bottom of the page */
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr; /* Sets up the 3-column layout */
+  gap: 3rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 3rem;
 }
@@ -22,32 +20,74 @@
 .footer-brand {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .footer-logo {
-  height: 50px;
+  height: 35px; /* Scaled down slightly for better proportions */
+  width: auto;
+  object-fit: contain;
+  align-self: flex-start;
 }
 
 .footer-brand p {
   font-size: 0.9rem;
   color: #596f62;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.footer-about {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-about h4, .footer-links h4 {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.footer-about p {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.portfolio-link {
+  color: #7ea16b;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+.portfolio-link:hover {
+  color: #abd897;
 }
 
 .footer-links {
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .footer-links a {
   color: #9ca3af;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: #7ea16b;
+  color: #fff;
 }
 
 .footer-bottom {
@@ -58,16 +98,22 @@
   color: #4b5563;
 }
 
-/* Mobile Responsive */
-@media (max-width: 600px) {
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+  .plethora-footer {
+    padding: 3rem 1.5rem 2rem 1.5rem;
   }
-  
-  .footer-links {
-    flex-direction: column;
-    gap: 1rem;
+
+  .footer-content {
+    grid-template-columns: 1fr; /* Collapses grid into single vertical column */
+    gap: 2.5rem;
+  }
+
+  .footer-brand, .footer-about, .footer-links {
+    text-align: left;
+  }
+
+  .footer-bottom {
+    text-align: left;
   }
 }

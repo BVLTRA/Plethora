@@ -385,3 +385,74 @@
 .btn-primary:disabled:hover {
   background-color: #596f62; 
 }
+
+
+/* --- MOBILE RESPONSIVENESS (AUTH GRID) --- */
+@media (max-width: 768px) {
+  .auth-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 100px 0 2rem 0;
+    overflow-x: hidden; 
+    overflow-y: auto;
+  }
+
+  .auth-left {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0rem;
+    padding: 0 1.5rem; 
+    box-sizing: border-box;
+  }
+
+  .welcome-text-wrapper {
+    width: 100%;
+    margin-bottom: 0px;
+  }
+
+  .welcome-title {
+    font-size: 3rem;
+    line-height: 1.15;
+  }
+
+  .welcome-subtitle {
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    white-space: normal;
+  }
+
+  .auth-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1.5rem; /* Squeezes the card inward */
+    box-sizing: border-box;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box; 
+  }
+
+  .auth-header {
+    display: flex;
+    flex-direction: row; 
+    width: 100%;
+  }
+
+  .auth-global-header {
+    align-content: center;
+    padding: 2rem;
+  }
+
+  .auth-global-header img {
+    height: 38px;
+    align-self: center;
+  }
+}
