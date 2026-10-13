@@ -49,7 +49,7 @@ export default function ReadComment() {
     try {
       // NOTEEEEe: Target parent entry_id, NOT the comment id
       const method = !isLiked ? 'POST' : 'DELETE';
-      const response = await fetch('${apiUrl}/likes', {
+      const response = await fetch(`${apiUrl}/likes`, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, entryId: data.entry_id })

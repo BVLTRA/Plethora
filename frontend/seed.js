@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // Paste your actual MongoDB Atlas connection string here just for this script
-const MONGODB_URI = "mongodb+srv://251056_db_user:kHWhy3VnNSOauiCB@plethora.xjqvmqr.mongodb.net/?appName=Plethora";
+const MONGODB_URI = "...";
 
 // Hardcoded bcrypt hash for 'password123' to avoid installing extra dependencies
 const defaultPassword = "$$2a$12$R9h/cIPz0gi.URNNX3cl2up.x25Q1P.x6K1h3gPz2y5q.O1x.7m"; 

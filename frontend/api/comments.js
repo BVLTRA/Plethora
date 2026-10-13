@@ -1,5 +1,5 @@
-import connectDB from './lib/db';
-import { Entry, User } from './lib/models';
+import connectDB from './lib/db.js';
+import { Entry, User } from './lib/models.js';
 
 export default async function handler(req, res) {
   await connectDB();
