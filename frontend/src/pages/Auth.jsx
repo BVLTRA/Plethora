@@ -34,7 +34,7 @@ export default function Auth() {
       // --- SIGNUP PROCESS ---
       try {
         // Send data to backend port
-        const response = await fetch('${apiUrl}/signup.php', {
+        const response = await fetch('${apiUrl}/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export default function Auth() {
       // --- LOGIN MECHANISM ---
       try {
         // Send data to backend port
-        const response = await fetch('${apiUrl}/login.php', {
+        const response = await fetch('${apiUrl}/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export default function Auth() {
     onSuccess: async (tokenResponse) => {
       try {
         // Send Google token to backend
-        const response = await fetch('${apiUrl}/google.php?action=auth', {
+        const response = await fetch('${apiUrl}/google?action=auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: tokenResponse.access_token })

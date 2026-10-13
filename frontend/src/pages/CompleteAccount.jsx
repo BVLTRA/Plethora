@@ -37,7 +37,7 @@ export default function CompleteAccount() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('${apiUrl}/google.php?action=signup', {
+      const response = await fetch('${apiUrl}/google?action=signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

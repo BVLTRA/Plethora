@@ -26,7 +26,7 @@ export default function Share() {
     if (id && user) {
       const fetchDraft = async () => {
         try {
-          const response = await fetch(`${apiUrl}/story.php?id=${id}&visitorId=${user.id}`);
+          const response = await fetch(`${apiUrl}/story?id=${id}&visitorId=${user.id}`);
           if (response.ok) {
             const data = await response.json();
             // Verify ownership before loading the text
@@ -59,8 +59,8 @@ export default function Share() {
 
     try {
       const endpoint = id 
-        ? '${apiUrl}/update_entry.php' 
-        : '${apiUrl}/create_entry.php';
+        ? '${apiUrl}/update_entry' 
+        : '${apiUrl}/create_entry';
 
       const payload = {
         userId: user.id,
@@ -97,7 +97,7 @@ export default function Share() {
       if (id) {
         // If exists in the database, startdeletion
         try {
-          await fetch('${apiUrl}/delete_entry.php', {
+          await fetch('${apiUrl}/delete_entry', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ entryId: id, requesterId: user.id })

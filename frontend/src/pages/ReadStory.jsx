@@ -53,8 +53,8 @@ export default function ReadStory() {
     const fetchStory = async () => {
       try {
         const url = user
-          ? `${apiUrl}/story.php?id=${id}&visitorId=${user.id}`
-          : `${apiUrl}/story.php?id=${id}`;
+          ? `${apiUrl}/story?id=${id}&visitorId=${user.id}`
+          : `${apiUrl}/story?id=${id}`;
 
         const response = await fetch(url);
 
@@ -89,7 +89,7 @@ export default function ReadStory() {
     try {
       if (!isLiked) {
         const response = await fetch(
-          "${apiUrl}/likes.php",
+          "${apiUrl}/likes",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -99,7 +99,7 @@ export default function ReadStory() {
         if (!response.ok) throw new Error("Failed to like");
       } else {
         const response = await fetch(
-          "${apiUrl}/likes.php",
+          "${apiUrl}/likes",
           {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
@@ -122,7 +122,7 @@ export default function ReadStory() {
       async () => {
         try {
           const response = await fetch(
-            "${apiUrl}/delete_entry.php",
+            "${apiUrl}/delete_entry",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

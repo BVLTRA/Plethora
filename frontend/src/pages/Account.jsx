@@ -53,7 +53,7 @@ export default function Account() {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch(`${apiUrl}/account.php?id=${user.id}`);
+        const response = await fetch(`${apiUrl}/account?id=${user.id}`);
         if (response.ok) {
           const data = await response.json();
           setAccountData(data);
@@ -82,7 +82,7 @@ export default function Account() {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/users.php?id=${user.id}`, {
+      const response = await fetch(`${apiUrl}/users?id=${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm)
@@ -117,7 +117,7 @@ export default function Account() {
   // The missing function that fires the database wipe
   const executeDeletion = async (keepEntries) => {
     try {
-      const response = await fetch(`${apiUrl}/users.php?id=${user.id}`, {
+      const response = await fetch(`${apiUrl}/users?id=${user.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keepEntries })

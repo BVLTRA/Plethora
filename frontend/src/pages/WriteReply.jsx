@@ -37,7 +37,7 @@ export default function WriteReply() {
   useEffect(() => {
     const fetchOriginalStory = async () => {
       try {
-        const response = await fetch(`${apiUrl}/story.php?id=${id}`);
+        const response = await fetch(`${apiUrl}/story?id=${id}`);
         if (response.ok) {
           const data = await response.json();
           setStory(data);
@@ -58,7 +58,7 @@ export default function WriteReply() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("${apiUrl}/comments.php", {
+      const response = await fetch("${apiUrl}/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

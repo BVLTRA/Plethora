@@ -23,7 +23,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
     try {
       if (!isLiked) {
         // Send the Like to the database
-        const response = await fetch('${apiUrl}/likes.php', {
+        const response = await fetch('${apiUrl}/likes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })
@@ -33,7 +33,7 @@ export default function StoryCard({ id, username, title, excerpt, initialIsLiked
         if (!response.ok) setIsLiked(false);
       } else {
         // Send the Un-Like to the database
-        const response = await fetch('${apiUrl}/likes.php', {
+        const response = await fetch('${apiUrl}/likes', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: user.id, entryId: id })

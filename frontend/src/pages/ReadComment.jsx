@@ -21,8 +21,8 @@ export default function ReadComment() {
     const fetchStack = async () => {
       try {
         const url = user 
-          ? `${apiUrl}/comments.php?id=${id}?visitorId=${user.id}`
-          : `${apiUrl}/comments.php?id=${id}`;
+          ? `${apiUrl}/comments?id=${id}?visitorId=${user.id}`
+          : `${apiUrl}/comments?id=${id}`;
 
         const response = await fetch(url);
         if (response.ok) {
@@ -49,7 +49,7 @@ export default function ReadComment() {
     try {
       // NOTEEEEe: Target parent entry_id, NOT the comment id
       const method = !isLiked ? 'POST' : 'DELETE';
-      const response = await fetch('${apiUrl}/likes.php', {
+      const response = await fetch('${apiUrl}/likes', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, entryId: data.entry_id })
