@@ -15,7 +15,7 @@ export default function Discover() {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const url = user ? `${apiUrl}/discover?userId=${user.id}` : '${apiUrl}/discover';
+        const url = user ? `${apiUrl}/discover?userId=${user.id}` : `${apiUrl}/discover`;
 
         const response = await fetch(url);
         if (response.ok) {
