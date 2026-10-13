@@ -29,13 +29,20 @@ export default function HeroSection() {
             >
               Learn more
             </button>
-            
+
+            <button 
+              className="btn-outline" 
+              onClick={() => navigate('/discover')}
+            >
+              Explore entries  
+            </button>
+
             {/* Route directly to the share page */}
             <button 
               className="btn-solid" 
               onClick={() => navigate('/share')}
             >
-              Release
+              Share your story
             </button>
           </div>
         </div>

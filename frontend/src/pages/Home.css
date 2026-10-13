@@ -183,3 +183,19 @@
   line-height: 1.6;
   color: #9ca3af;
 }
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 600px) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start; /* buttons to align to the left */
+    gap: 1rem;
+  }
+  
+  /* buttons to span the full width of the screen on mobile */
+  .hero-actions .btn-solid, 
+  .hero-actions .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+}

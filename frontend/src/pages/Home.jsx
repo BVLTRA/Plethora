@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroSection from '../components/Hero'; // Adjust the import path if Hero is in a components folder
+import HeroSection from '../components/Hero'; 
 import './Home.css';
 
 export default function Home() {
