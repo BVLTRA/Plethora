@@ -29,7 +29,7 @@ const EntrySchema = new mongoose.Schema({
   title: String,
   content: String,
   status: { type: String, default: 'published' },
-  likes: [String], // Array of User IDs
+  likes: [String], 
   comments: [{
     user_id: String,
     username: String,
@@ -43,15 +43,14 @@ const EntrySchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Entry = mongoose.models.Entry || mongoose.model('Entry', EntrySchema);
 
-// --- HELPER TO FORMAT MONGODB _id TO id ---
-const formatEntry = (e, userId) => ({
+const formatEntry = (e, visitorId) => ({
   id: e._id.toString(),
   title: e.title,
   content: e.content,
   created_at: e.created_at,
   username: e.username,
   status: e.status,
-  is_liked_by_user: userId ? e.likes.includes(userId) : false
+  is_liked_by_user: visitorId ? e.likes.includes(visitorId.toString()) : false
 });
 
 // --- AUTH ENDPOINTS ---
@@ -78,29 +77,29 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.post('/api/google-auth', async (req, res) => {
-  try {
-    const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${req.body.accessToken}` } });
-    const profile = await googleRes.json();
-    const user = await User.findOne({ email: profile.email });
-    
-    if (user) {
-      await User.findByIdAndUpdate(user._id, { last_active: new Date() });
-      return res.status(200).json({ isNewUser: false, user: { id: user._id.toString(), username: user.username, email: user.email } });
-    }
-    res.status(202).json({ isNewUser: true, googleData: { email: profile.email, name: profile.name } });
-  } catch (err) {
-    res.status(500).json({ error: 'Google Auth failed.' });
-  }
-});
+app.post('/api/google', async (req, res) => {
+  const action = req.query.action;
 
-app.post('/api/google-signup', async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const user = await User.create({ username: req.body.username, email: req.body.email, password_hash: hashedPassword });
-    res.status(201).json({ user: { id: user._id.toString(), username: user.username, email: user.email } });
+    if (action === 'auth') {
+      const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${req.body.accessToken}` } });
+      const profile = await googleRes.json();
+      const user = await User.findOne({ email: profile.email });
+      
+      if (user) {
+        await User.findByIdAndUpdate(user._id, { last_active: new Date() });
+        return res.status(200).json({ isNewUser: false, user: { id: user._id.toString(), username: user.username, email: user.email } });
+      }
+      return res.status(202).json({ isNewUser: true, googleData: { email: profile.email, name: profile.name } });
+    } 
+    
+    if (action === 'signup') {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const user = await User.create({ username: req.body.username, email: req.body.email, password_hash: hashedPassword });
+      return res.status(201).json({ user: { id: user._id.toString(), username: user.username, email: user.email } });
+    }
   } catch (err) {
-    res.status(400).json({ error: 'Username already exists.' });
+    res.status(500).json({ error: 'Google transmission failed.' });
   }
 });
 
@@ -114,16 +113,16 @@ app.get('/api/discover', async (req, res) => {
   }
 });
 
-app.get('/api/entries/:id', async (req, res) => {
+app.get('/api/story', async (req, res) => {
   try {
-    const e = await Entry.findById(req.params.id);
+    const e = await Entry.findById(req.query.id);
     if (!e) return res.status(404).json({ error: 'Signal lost.' });
     
     const comments = e.comments.map(c => ({ id: c._id.toString(), content: c.content, created_at: c.created_at, username: c.username }));
     
     res.status(200).json({
-      id: e._id.toString(), title: e.title, content: e.content, created_at: e.created_at, username: e.username,
-      likes_count: e.likes.length, comments_count: e.comments.length, is_liked_by_user: req.query.visitorId ? e.likes.includes(req.query.visitorId) : false,
+      id: e._id.toString(), author_id: e.user_id, title: e.title, content: e.content, created_at: e.created_at, username: e.username,
+      likes_count: e.likes.length, comments_count: e.comments.length, is_liked_by_user: req.query.visitorId ? e.likes.includes(req.query.visitorId.toString()) : false,
       comments: comments.sort((a,b) => new Date(a.created_at) - new Date(b.created_at))
     });
   } catch (err) {
@@ -131,7 +130,7 @@ app.get('/api/entries/:id', async (req, res) => {
   }
 });
 
-app.post('/api/entries', async (req, res) => {
+app.post('/api/create_entry', async (req, res) => {
   try {
     const user = await User.findById(req.body.userId);
     const entry = await Entry.create({ user_id: user._id.toString(), username: user.username, title: req.body.title, content: req.body.content, status: req.body.status });
@@ -142,10 +141,28 @@ app.post('/api/entries', async (req, res) => {
   }
 });
 
+app.post('/api/update_entry', async (req, res) => {
+  try {
+    await Entry.findByIdAndUpdate(req.body.entryId, { title: req.body.title, content: req.body.content, status: req.body.status });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update.' });
+  }
+});
+
+app.post('/api/delete_entry', async (req, res) => {
+  try {
+    await Entry.findByIdAndDelete(req.body.entryId);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Deletion failed.' });
+  }
+});
+
 // --- INTERACTIONS ---
 app.post('/api/likes', async (req, res) => {
   try {
-    await Entry.findByIdAndUpdate(req.body.entryId, { $addToSet: { likes: req.body.userId } });
+    await Entry.findByIdAndUpdate(req.body.entryId, { $addToSet: { likes: req.body.userId.toString() } });
     res.status(201).json({ message: 'Acknowledged.' });
   } catch (err) {
     res.status(500).json({ error: 'Interaction failed.' });
@@ -154,7 +171,7 @@ app.post('/api/likes', async (req, res) => {
 
 app.delete('/api/likes', async (req, res) => {
   try {
-    await Entry.findByIdAndUpdate(req.body.entryId, { $pull: { likes: req.body.userId } });
+    await Entry.findByIdAndUpdate(req.body.entryId, { $pull: { likes: req.body.userId.toString() } });
     res.status(200).json({ message: 'Severed.' });
   } catch (err) {
     res.status(500).json({ error: 'Interaction failed.' });
@@ -172,23 +189,23 @@ app.post('/api/comments', async (req, res) => {
 });
 
 // --- PROFILE & ACCOUNT AGGREGATION ---
-app.get('/api/account/:id', async (req, res) => {
+app.get('/api/account', async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    const entries = await Entry.find({ user_id: req.params.id, status: 'published' }).sort({ created_at: -1 });
-    const likes = await Entry.find({ likes: req.params.id }).sort({ created_at: -1 });
-    const commented = await Entry.find({ "comments.user_id": req.params.id });
+    const user = await User.findById(req.query.id);
+    const entries = await Entry.find({ user_id: req.query.id, status: 'published' }).sort({ created_at: -1 });
+    const likes = await Entry.find({ likes: req.query.id }).sort({ created_at: -1 });
+    const commented = await Entry.find({ "comments.user_id": req.query.id });
     
     let responses = [];
     commented.forEach(entry => {
-      entry.comments.filter(c => c.user_id === req.params.id).forEach(c => {
+      entry.comments.filter(c => c.user_id === req.query.id).forEach(c => {
         responses.push({ id: entry._id.toString(), op_username: entry.username, content: c.content, created_at: c.created_at });
       });
     });
 
     res.status(200).json({
       profile: { id: user._id.toString(), username: user.username, email: user.email, quote: user.quote, last_active: user.last_active },
-      entries: entries.map(e => formatEntry(e, req.params.id)),
+      entries: entries.map(e => formatEntry(e, req.query.id)),
       likes: likes.map(e => ({ id: e._id.toString(), title: e.title, content: e.content })),
       responses: responses.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
     });
@@ -197,9 +214,9 @@ app.get('/api/account/:id', async (req, res) => {
   }
 });
 
-app.get('/api/profile/:username', async (req, res) => {
+app.get('/api/profile', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
+    const user = await User.findOne({ username: req.query.username });
     if (!user) return res.status(404).json({ error: 'Node not found.' });
     
     const entries = await Entry.find({ user_id: user._id.toString(), status: 'published' }).sort({ created_at: -1 });
@@ -224,30 +241,29 @@ app.get('/api/profile/:username', async (req, res) => {
   }
 });
 
-app.put('/api/users/:id', async (req, res) => {
+app.put('/api/users', async (req, res) => {
   try {
     let updates = { username: req.body.username, email: req.body.email, quote: req.body.quote };
     if (req.body.password) updates.password_hash = await bcrypt.hash(req.body.password, 10);
-    await User.findByIdAndUpdate(req.params.id, updates);
+    await User.findByIdAndUpdate(req.query.id, updates);
     res.status(200).json({ message: 'Updated.' });
   } catch (err) {
     res.status(500).json({ error: 'Update failed.' });
   }
 });
 
-app.delete('/api/users/:id', async (req, res) => {
+app.delete('/api/users', async (req, res) => {
   try {
     if (req.body.keepEntries) {
-      await Entry.updateMany({ user_id: req.params.id }, { username: 'Unknown_Node' });
+      await Entry.updateMany({ user_id: req.query.id }, { username: 'Unknown_Node' });
     } else {
-      await Entry.deleteMany({ user_id: req.params.id });
+      await Entry.deleteMany({ user_id: req.query.id });
     }
-    await User.findByIdAndDelete(req.params.id);
+    await User.findByIdAndDelete(req.query.id);
     res.status(200).json({ message: 'Node deleted.' });
   } catch (err) {
     res.status(500).json({ error: 'Deletion failed.' });
   }
 });
 
-// Export the app for Vercel
 module.exports = app;
